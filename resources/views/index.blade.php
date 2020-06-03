@@ -4,7 +4,7 @@
         <table class="table">
             <thead class="thead-dark">
                 <tr>
-                    <th>{{ __('Image') }}</th>
+                    <th></th>
                     <th>{{ __('Title') }}</th>
                     <th>{{ __('Description') }}</th>
                     <th>{{ __('Price') }}</th>
@@ -18,7 +18,7 @@
                         @if ($product->image)
                             <img src="{{ URL::to('/') }}/images/{{ $product->image }}" width="70px" height="70px">
                         @else
-                            {{ __('No image here') }}
+                            {{ __('No image') }}
                         @endif
                     </td>
                     <td>{{ $product->title }}</td>

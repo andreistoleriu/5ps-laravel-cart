@@ -15,9 +15,10 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', 'PageController@index');
 Route::get('/cart', 'PageController@cart');
+Route::post('/cart', 'PageController@mail');
 Route::get('/login', 'PageController@login');
-Route::get('/product', 'PageController@product');
-Route::get('/products', 'PageController@products');
+Route::get('/logout', 'PageController@logout');
+Route::post('/login', 'PageController@auth');
 Route::get('/orders', 'PageController@orders');
 
 Route::resource('products', 'ProductsController');

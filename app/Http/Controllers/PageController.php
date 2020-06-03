@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\Checkout;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Config;
+use App\Product;
 
 class PageController extends Controller
 {
@@ -23,10 +26,7 @@ class PageController extends Controller
             return redirect('/');
         }
 
-        return view('index', ['products' => DB::table('products')->whereNotIn('id', $cart)->get()]);
-
-        // $products = DB::table('products')->get();
-        // return view('index', ['products' => $products]);
+        return view('index', ['products' => Product::query()->whereNotIn('id', $cart)->get()]);
     }
     
     /**
@@ -45,7 +45,7 @@ class PageController extends Controller
 
         session()->put('cart', $cart);
 
-        $products = DB::table('products')->whereIn('id', $cart)->get();
+        $products = Product::query()->whereIn('id', $cart)->get();
         $price = 0;
 
         return view('cart', [
@@ -55,17 +55,61 @@ class PageController extends Controller
         ]);
     }
 
+    public function mail()
+    {
+        $data = request()->validate([
+            'name' => 'required|min:3',
+            'contactDetails' => 'required|max:255',
+            'comments' => 'required'
+        ]);
+
+        $cart = request()->session()->pull('cart');
+        $products = Product::query()->whereIn('id', $cart)->get();
+        $price = 0;
+        Mail::to('example@test.com')->send(new Checkout($data, $products, $price));
+
+        return redirect('/cart?success');
+    }
     
     /**
      * View login page
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
+
     public function login()
     {
         return view('login');
     }
-    
+
+    public function auth()
+    {
+        $errorMessage = [];
+
+        if (request()->input('name') !== config('admin.admin_name')) {
+            $errorMessage['name'][] = __('Wrong username');
+        }
+
+        if (request()->input('password') !== config('admin.admin_password')) {
+            $errorMessage['password'][] = __('Wrong password');
+        }
+
+        if (!$errorMessage) {
+            session(['auth' => true]);
+            return redirect('products');
+        } else {
+            return view('login', compact('errorMessage'));
+        }
+    }
+
+    public function logout()
+    {
+        session()->pull('auth');
+        session()->put(['auth' => false]);
+
+        return redirect('/');
+    }
+
     /**
      * View product page
      *
