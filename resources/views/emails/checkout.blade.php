@@ -1,7 +1,7 @@
 @component('mail::message')
-<strong>From:</strong> {{ $data['name'] }} <br />
-<strong>Contact Details:</strong> {{ $data['contactDetails'] }} <br />
-<strong>Comments:</strong> {{ $data['comments'] }} <br />
+<strong>From:</strong>{{ $data['name'] }}<br />
+<strong>Contact Details:</strong>{{ $data['contactDetails'] }}<br />
+<strong>Comments:</strong>{{ $data['comments'] }}<br />
 <br />
 <strong>Order:</strong>
 @component('mail::table')
@@ -18,7 +18,7 @@
 <tr>
 <td align="middle">
     @if ($product->image)
-        <img src="{{ URL::to('/') }}/images/{{ $product->image }}" width="70px">
+        <img src="{{ asset('storage/images/' . $product->image) }}" width="200px">
     @else
         {{ __('No image') }}
     @endif

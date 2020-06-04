@@ -24,13 +24,11 @@
                     <th>{{ __('Action') }}</th>
                 </tr>
             </thead>
-
             @foreach ($products as $product)
-                <?php $price += $product->price ?>
                 <tr>
                     <td>
                         @if ($product->image)
-                            <img src="{{ URL::to('/') }}/images/{{ $product->image }}" width="200px">
+                            <img src="{{ asset('storage/images/' . $product->image) }}" width="200px">
                         @else
                             {{ __('No image') }}
                         @endif
@@ -80,7 +78,7 @@
             </div>
 
             <div>
-                <input type="submit" name="submit" value="Checkout" class="btn btn-primary">
+                <input type="submit" name="submit" value="{{__('Checkout') }}" class="btn btn-primary">
             </div>
         </form>
     @endif

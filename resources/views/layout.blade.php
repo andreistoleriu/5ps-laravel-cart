@@ -14,11 +14,11 @@
         <nav class="nav justify-content-center">
             <a class="nav-link" href="{{ '/' }}">{{ __('Home') }}</a>
             <a class="nav-link" href="{{ '/cart' }}">{{__('Cart')}}</a>
-            <a class="nav-link" href="{{ session('auth') ? '/logout' : '/login' }}">
-                {{ session('auth') ? __('Logout') : __('Login') }}
-            </a>
             <a class="nav-link" href="{{ '/products' }}">{{__('Products')}}</a>
             <a class="nav-link" href="{{ '/orders' }}">{{__('Orders')}}</a>
+            <a class="btn btn-light" class="nav-link" href="{{ session('auth') ? '/logout' : '/login' }}">
+                {{ session('auth') ? __('Logout') : __('Login') }}
+            </a>
         </nav>
         
         @yield('content')

@@ -4,12 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Mail\Checkout;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
-use Config;
 use App\Product;
+use App\Order;
 
-class PageController extends Controller
+class ShopController extends Controller
 {
     /**
      * View index page
@@ -25,7 +24,7 @@ class PageController extends Controller
 
             return redirect('/');
         }
-
+        
         return view('index', ['products' => Product::query()->whereNotIn('id', $cart)->get()]);
     }
     
@@ -38,7 +37,6 @@ class PageController extends Controller
     {
         $cart = $request->session()->pull('cart', []);
 
-        // check for duplicate array keys
         if (($key = array_search($request->id, $cart)) !== false) {
             unset($cart[$key]);
         }
@@ -47,6 +45,10 @@ class PageController extends Controller
 
         $products = Product::query()->whereIn('id', $cart)->get();
         $price = 0;
+
+        foreach ($products as $product) {
+            $price += $product->price;
+        }
 
         return view('cart', [
             'products' => $products,
@@ -58,14 +60,26 @@ class PageController extends Controller
     public function mail()
     {
         $data = request()->validate([
-            'name' => 'required|min:3',
-            'contactDetails' => 'required|max:255',
-            'comments' => 'required'
+            'name' => 'required|min:3|max:255',
+            'contactDetails' => 'required|min:3|max:255',
         ]);
 
         $cart = request()->session()->pull('cart');
         $products = Product::query()->whereIn('id', $cart)->get();
         $price = 0;
+
+        foreach ($products as $product) {
+            $price += $product->price;
+        }
+        $order = new Order();
+        
+        $order->name = request()->input('name');
+        $order->contactDetails = request()->input('contactDetails');
+        $order->price = $price;
+
+        $order->save();
+        $order->products()->attach($cart);
+
         Mail::to('example@test.com')->send(new Checkout($data, $products, $price));
 
         return redirect('/cart?success');
@@ -87,11 +101,11 @@ class PageController extends Controller
         $errorMessage = [];
 
         if (request()->input('name') !== config('admin.admin_name')) {
-            $errorMessage['name'][] = __('Wrong username');
+            $errorMessage['name'][] = __('The username is incorrect');
         }
 
         if (request()->input('password') !== config('admin.admin_password')) {
-            $errorMessage['password'][] = __('Wrong password');
+            $errorMessage['password'][] = __('The password is incorrect');
         }
 
         if (!$errorMessage) {

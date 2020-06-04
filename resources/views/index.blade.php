@@ -16,7 +16,7 @@
                 <tr>
                     <td>
                         @if ($product->image)
-                            <img src="{{ URL::to('/') }}/images/{{ $product->image }}" width="70px" height="70px">
+                            <img src="{{ asset('storage/images/' . $product->image) }}" width="200px">
                         @else
                             {{ __('No image') }}
                         @endif

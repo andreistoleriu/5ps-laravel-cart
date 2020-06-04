@@ -8,7 +8,7 @@
     <h1>{{ __('Login') }}</h1>
 
     @if (request()->has('unauthorized'))
-        <p>{{ __('You must be logged in to access this page') }}</p>
+        <p class="text-danger">{{ __('Please login to access that page') }}</p>
     @endif
 
     <form method="POST" class="form-group">
@@ -20,7 +20,7 @@
 
             @if (isset($errorMessage['name']))
                 @foreach ($errorMessage['name'] as $error)
-                    <p>{!! $error !!}</p>
+                    <p class="text-danger">{!! $error !!}</p>
                 @endforeach
             @endif
         </div>
@@ -31,7 +31,7 @@
 
             @if (isset($errorMessage['password']))
                 @foreach ($errorMessage['password'] as $error)
-                    <p>{!! $error !!}</p>
+                    <p class="text-danger">{!! $error !!}</p>
                 @endforeach
             @endif
         </div>

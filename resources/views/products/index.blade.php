@@ -24,8 +24,7 @@
                     <td>{{ $product->id }}</td>
                     <td>
                         @if ($product->image)
-                            <img alt="{{ __('Product image') }}" src="{{ asset('storage/images/' . $product->image) }}"
-                                 width="70px" height="70px">
+                        <img src="{{ asset('storage/images/' . $product->image) }}" width="200px">
                         @else
                             {{ __('No image here') }}
                         @endif
