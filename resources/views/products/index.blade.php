@@ -9,15 +9,17 @@
     <h1>{{ __('Products') }}</h1>
 
         <table class="table">
-            <tr>
-                <th>{{ __('Id') }}</th>
-                <th>{{ __('Image') }}</th>
-                <th>{{ __('Title') }}</th>
-                <th>{{ __('Description') }}</th>
-                <th>{{ __('Price') }}</th>
-                <th>{{ __('Edit') }}</th>
-                <th>{{ __('Delete') }}</th>
-            </tr>
+            <thead class="thead-dark">
+                <tr>
+                    <th>{{ __('Id') }}</th>
+                    <th>{{ __('Image') }}</th>
+                    <th>{{ __('Title') }}</th>
+                    <th>{{ __('Description') }}</th>
+                    <th>{{ __('Price') }}</th>
+                    <th>{{ __('Edit') }}</th>
+                    <th>{{ __('Delete') }}</th>
+                </tr>
+            </thead>
 
             @forelse ($products as $product)
                 <tr>

@@ -14,7 +14,6 @@
 </tr>
 
 @foreach ($products as $product)
-<?php $price += $product->price ?>
 <tr>
 <td align="middle">
     @if ($product->image)

@@ -36,7 +36,7 @@
                     <td>{{ $product->title }}</td>
                     <td>{{ $product->description }}</td>
                     <td>{{ $product->price }}</td>
-                    <td><a href="?id={{ $product->id }}" class="btn btn-danger">{{ __('Remove') }}</a></td>
+                    <td><a href="?id={{ $product->id }}" class="btn btn-danger">{{ __('Delete') }}</a></td>
                 </tr>
             @endforeach
             <tr>

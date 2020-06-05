@@ -18,14 +18,19 @@ class ShopController extends Controller
     public function index(Request $request)
     {
         $cart = $request->session()->get('cart', []);
+
+        return view('index', ['products' => Product::query()->whereNotIn('id', $cart)->get()]);
+    }
+
+    public function addItemstoCart(Request $request)
+    {
+        $cart = $request->session()->get('cart', []);
         
         if ($request->id && !in_array($request->id, $cart)) {
             $request->session()->push('cart', $request->id);
 
             return redirect('/');
         }
-        
-        return view('index', ['products' => Product::query()->whereNotIn('id', $cart)->get()]);
     }
     
     /**
@@ -62,6 +67,7 @@ class ShopController extends Controller
         $data = request()->validate([
             'name' => 'required|min:3|max:255',
             'contactDetails' => 'required|min:3|max:255',
+            'comments' => 'min:3|max:255'
         ]);
 
         $cart = request()->session()->pull('cart');
@@ -74,7 +80,7 @@ class ShopController extends Controller
         $order = new Order();
         
         $order->name = request()->input('name');
-        $order->contactDetails = request()->input('contactDetails');
+        $order->contact_details = request()->input('contactDetails');
         $order->price = $price;
 
         $order->save();

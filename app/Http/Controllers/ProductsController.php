@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Product;
+use Illuminate\Http\Request;
 
 class ProductsController extends Controller
 {
@@ -36,11 +37,20 @@ class ProductsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Product $product)
+    public function store(Request $request)
     {
-        $product->create($this->validateRequest());
+        $this->validateRequest();
 
-        $this->storeImage($product);
+        $fileNameToStore = $this->fileToUpload();
+
+        $product = new Product;
+
+        $product->title = $request->input('title');
+        $product->description = $request->input('description');
+        $product->price = $request->input('price');
+        $product->image = $fileNameToStore;
+
+        $product->save();
 
         return redirect('/products');
     }
@@ -51,9 +61,9 @@ class ProductsController extends Controller
      * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function show(Product $product)
+    public function show()
     {
-        //
+        return redirect('/products');
     }
 
     /**
@@ -76,8 +86,11 @@ class ProductsController extends Controller
      */
     public function update(Product $product)
     {
-        $product->update($this->validateRequest());
-
+        if (request()->hasFile('image')) {
+            $fileNameToStore = $this->filetoUpload();
+            $product->update($this->validateRequest());
+            $product->update(['image' => $fileNameToStore]);
+        }
         return redirect('/products');
     }
 
@@ -105,16 +118,23 @@ class ProductsController extends Controller
             'title' => 'required|min:3',
             'description' => 'required|min:10',
             'price' => 'required|numeric',
-            'image' => 'sometimes|file|image|max:5000'
+            'image' => 'image|mimes:jpg,jpeg,png,bmp|max:5000'
         ]);
     }
 
-    public function storeImage(Product $product)
+    public function filetoUpload()
     {
-        if (request()->has('image')) {
-            $product->update([
-               'image' => request()->image->store('public', 'images')
-            ]);
+        if (request()->hasFile('image')) {
+            $filenameWithExt = request()->file('image')->getClientOriginalName();
+            $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+            $extension = request()->file('image')->getClientOriginalExtension();
+            $fileNameToStore = $filename . '_' . time() . '.' . $extension;
+
+            request()->file('image')->storeAs('public/images', $fileNameToStore);
+        } else {
+            $fileNameToStore = null;
         }
+
+        return $fileNameToStore;
     }
 }

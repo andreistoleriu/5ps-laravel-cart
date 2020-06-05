@@ -13,20 +13,24 @@
             </thead>
 
             @forelse ($products as $product)
-                <tr>
-                    <td>
-                        @if ($product->image)
+                <form action="/" method="POST">
+                    @csrf
+                    <tr>
+                        <td>
+                            @if ($product->image)
                             <img src="{{ asset('storage/images/' . $product->image) }}" width="200px">
-                        @else
+                            @else
                             {{ __('No image') }}
-                        @endif
-                    </td>
-                    <td>{{ $product->title }}</td>
-                    <td>{{ $product->description }}</td>
-                    <td>{{ $product->price }}</td>
-                    <td><a href="?id={{ $product->id }}" class="btn btn-primary">{{ __('Add') }}</a></td>
-                </tr>
-
+                            @endif
+                        </td>
+                        <td>{{ $product->title }}</td>
+                        <td>{{ $product->description }}</td>
+                        <td>{{ $product->price }}</td>
+                        <td><input type="submit" name="add" class="btn btn-primary" value=" {{ __('Add') }}"></td>
+                        <td><input type="hidden" name="id" value="{{ $product->id }}"></td>
+                    </tr>
+                </form>
+                    
                 @empty
                 <tr>
                     <td colspan="5">{{ __('The products are added in the cart') }}</td>
