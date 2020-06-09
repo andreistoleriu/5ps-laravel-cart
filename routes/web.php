@@ -13,15 +13,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', 'ShopController@index');
-Route::post('/', 'ShopController@addItemstoCart');
+Route::get('/', 'CartController@index');
+Route::post('/', 'CartController@addItemstoCart');
 
-Route::get('/cart', 'ShopController@cart');
-Route::post('/cart', 'ShopController@mail');
+Route::get('/cart', 'CartController@cart');
+Route::post('/cart', 'CartController@removeItems');
+Route::post('/cart', 'CartController@mail');
 
-Route::get('/login', 'ShopController@login');
-Route::get('/logout', 'ShopController@logout');
-Route::post('/login', 'ShopController@auth');
+Route::get('/login', 'CartController@login');
+Route::get('/logout', 'CartController@logout');
+Route::post('/login', 'CartController@auth');
 
 Route::get('/orders', 'OrdersController@orders');
 Route::get('/order', 'OrdersController@order');

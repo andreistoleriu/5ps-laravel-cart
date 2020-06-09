@@ -44,12 +44,10 @@ class ProductsController extends Controller
         $fileNameToStore = $this->fileToUpload();
 
         $product = new Product;
-
         $product->title = $request->input('title');
         $product->description = $request->input('description');
         $product->price = $request->input('price');
         $product->image = $fileNameToStore;
-
         $product->save();
 
         return redirect('/products');
@@ -86,11 +84,13 @@ class ProductsController extends Controller
      */
     public function update(Product $product)
     {
+        $product->update($this->validateRequest());
+
         if (request()->hasFile('image')) {
             $fileNameToStore = $this->filetoUpload();
-            $product->update($this->validateRequest());
             $product->update(['image' => $fileNameToStore]);
         }
+
         return redirect('/products');
     }
 

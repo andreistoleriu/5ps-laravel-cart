@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Product;
 use App\Order;
 
-class ShopController extends Controller
+class CartController extends Controller
 {
     /**
      * View index page
@@ -77,13 +77,13 @@ class ShopController extends Controller
         foreach ($products as $product) {
             $price += $product->price;
         }
+
         $order = new Order();
-        
         $order->name = request()->input('name');
         $order->contact_details = request()->input('contactDetails');
         $order->price = $price;
-
         $order->save();
+        
         $order->products()->attach($cart);
 
         Mail::to('example@test.com')->send(new Checkout($data, $products, $price));
@@ -128,25 +128,5 @@ class ShopController extends Controller
         session()->put(['auth' => false]);
 
         return redirect('/');
-    }
-
-    /**
-     * View product page
-     *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function product()
-    {
-        return view('product');
-    }
-    
-    /**
-     * View orders page
-     *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function orders()
-    {
-        return view('orders');
     }
 }
