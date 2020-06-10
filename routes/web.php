@@ -17,8 +17,8 @@ Route::get('/', 'CartController@index');
 Route::post('/', 'CartController@addItemstoCart');
 
 Route::get('/cart', 'CartController@cart');
-Route::post('/cart', 'CartController@removeItems');
-Route::post('/cart', 'CartController@mail');
+Route::post('/cart', 'CartController@removeItemsFromCart');
+Route::post('/cart/checkout', 'CartController@mail');
 
 Route::get('/login', 'CartController@login');
 Route::get('/logout', 'CartController@logout');

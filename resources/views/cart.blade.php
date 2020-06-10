@@ -25,21 +25,25 @@
                 </tr>
             </thead>
             @foreach ($products as $product)
+            <form action="cart?id={{ $product->id }}" method="post">
+                @csrf
                 <tr>
                     <td>
                         @if ($product->image)
-                            <img src="{{ asset('storage/images/' . $product->image) }}" width="200px">
+                        <img src="{{ asset('storage/images/' . $product->image) }}" width="200px">
                         @else
-                            {{ __('No image') }}
+                        {{ __('No image') }}
                         @endif
                     </td>
                     <td>{{ $product->title }}</td>
                     <td>{{ $product->description }}</td>
                     <td>{{ $product->price }}</td>
-                    <td><a href="?id={{ $product->id }}" class="btn btn-danger">{{ __('Delete') }}</a></td>
+                    <td><input type="submit" name="delete" class="btn btn-danger" value="{{ __('Remove') }}"></td>
+                    <td><input type="hidden" name="id" value=" {{ $product->id }}"></td>
                 </tr>
-            @endforeach
-            <tr>
+            </form>
+                @endforeach
+                <tr>
                 <hr>
                 <td colspan="3" align="middle">
                     {{ __('TOTAL') }}
@@ -47,7 +51,7 @@
             </tr>
         </table>
         
-        <form method="POST" class="form-group">
+        <form method="POST" action="cart/checkout" class="form-group" >
             @csrf
 
             <div>

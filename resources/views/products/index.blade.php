@@ -11,7 +11,6 @@
         <table class="table">
             <thead class="thead-dark">
                 <tr>
-                    <th>{{ __('Id') }}</th>
                     <th>{{ __('Image') }}</th>
                     <th>{{ __('Title') }}</th>
                     <th>{{ __('Description') }}</th>
@@ -23,10 +22,9 @@
 
             @forelse ($products as $product)
                 <tr>
-                    <td>{{ $product->id }}</td>
                     <td>
                         @if ($product->image)
-                        <img src="{{ asset('storage/images/' . $product->image) }}" width="200px">
+                        <img src="{{ asset('storage/images/' . $product->image) }}" width="150px">
                         @else
                             {{ __('No image here') }}
                         @endif

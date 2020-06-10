@@ -22,10 +22,9 @@ class CartController extends Controller
         return view('index', ['products' => Product::query()->whereNotIn('id', $cart)->get()]);
     }
 
-    public function addItemstoCart(Request $request)
+    public function addItemsToCart(Request $request)
     {
         $cart = $request->session()->get('cart', []);
-        
         if ($request->id && !in_array($request->id, $cart)) {
             $request->session()->push('cart', $request->id);
 
@@ -40,6 +39,26 @@ class CartController extends Controller
      */
     public function cart(Request $request)
     {
+        $cart = $request->session()->get('cart', []);
+        $products = Product::query()->whereIn('id', $cart)->get();
+        $price = 0;
+
+        foreach ($products as $product) {
+            $price += $product->price;
+        }
+
+        return view(
+            'cart',
+            [
+            'products' => $products,
+            'cart' => $cart,
+            'price' => $price,
+            ]
+        );
+    }
+
+    public function removeItemsFromCart(Request $request)
+    {
         $cart = $request->session()->pull('cart', []);
 
         if (($key = array_search($request->id, $cart)) !== false) {
@@ -48,18 +67,7 @@ class CartController extends Controller
 
         session()->put('cart', $cart);
 
-        $products = Product::query()->whereIn('id', $cart)->get();
-        $price = 0;
-
-        foreach ($products as $product) {
-            $price += $product->price;
-        }
-
-        return view('cart', [
-            'products' => $products,
-            'price' => $price,
-            'cart' => $cart
-        ]);
+        return redirect('/cart');
     }
 
     public function mail()
