@@ -11,7 +11,7 @@
     <table class="table">
         <thead class="thead-dark">
             <tr>
-                <th>{{ __('Image') }}</th>
+                <th></th>
                 <th>{{ __('Title') }}</th>
                 <th>{{ __('Description') }}</th>
                 <th>{{ __('Price') }}</th>
@@ -35,5 +35,10 @@
                 <td>{{ $product->price }}</td>
             </tr>
         @endforeach
+        <tr>
+            <td colspan="3" align="middle"><strong>
+                {{ __('TOTAL') }}</strong>
+            <td colspan="2"><strong>{{ $price }}</strong></td>
+        </tr>
     </table>
 @endsection

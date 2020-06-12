@@ -30,7 +30,8 @@ class OrdersController extends Controller
     {
         $request = request('id');
         $order = Order::findOrFail($request);
+        $price = $order->products->sum('price');
 
-        return view('order', compact('request', 'order'));
+        return view('order', compact('request', 'order', 'price'));
     }
 }

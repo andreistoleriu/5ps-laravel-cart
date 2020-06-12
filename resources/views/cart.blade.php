@@ -30,7 +30,7 @@
                 <tr>
                     <td>
                         @if ($product->image)
-                        <img src="{{ asset('storage/images/' . $product->image) }}" width="200px">
+                        <img src="{{ asset('storage/images/' . $product->image) }}" width="150px">
                         @else
                         {{ __('No image') }}
                         @endif
@@ -43,10 +43,9 @@
                 </tr>
             </form>
                 @endforeach
-                <tr>
-                <hr>
-                <td colspan="3" align="middle">
-                    {{ __('TOTAL') }}
+            <tr>
+                <td colspan="3" align="middle"><strong>
+                    {{ __('TOTAL') }}</strong>
                 <td colspan="2"><strong>{{ $price }}</strong></td>
             </tr>
         </table>
