@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Order;
+use App\OrderProduct;
+use App\Product;
 
 class OrdersController extends Controller
 {
@@ -30,8 +32,14 @@ class OrdersController extends Controller
     {
         $request = request('id');
         $order = Order::findOrFail($request);
-        $price = $order->products->sum('price');
+        $products = OrderProduct::where('order_id', $request)
+                    ->join('products', 'products.id', '=', 'product_id')
+                    ->select('products.*', 'order_product.order_id', 
+                    'order_product.product_id', 'order_product.product_price')
+                    ->get();
 
-        return view('order', compact('request', 'order', 'price'));
+        $price = $products->sum('product_price');
+
+        return view('order', compact('request', 'order', 'products','price'));
     }
 }

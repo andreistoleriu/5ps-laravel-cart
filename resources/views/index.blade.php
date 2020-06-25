@@ -1,6 +1,7 @@
 @extends('layout')
 
 @section('content')
+    <h1>{{ __('Home') }}</h1>
         <table class="table">
             <thead class="thead-dark">
                 <tr>
@@ -9,9 +10,10 @@
                     <th>{{ __('Description') }}</th>
                     <th>{{ __('Price') }}</th>
                     <th>{{ __('Action') }}</th>
+                    <th></th>
                 </tr>
             </thead>
-
+            
             @forelse ($products as $product)
                 <form action="/" method="POST">
                     @csrf
@@ -33,7 +35,7 @@
                     
                 @empty
                 <tr>
-                    <td colspan="5">{{ __('The products are added in the cart') }}</td>
+                    <td colspan="7">{{ __('No products available') }}</td>
                 </tr>
             @endforelse
         </table>

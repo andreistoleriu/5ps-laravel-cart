@@ -55,7 +55,7 @@
 
             <div>
                 <label for="name">{{ __('Name') }}</label>
-                <input type="text" name="name" value="{{ old('name') }}" class="form-control">
+                <input type="text" name="name" value="{{ old('name') }}" class="form-control" placeholder="Insert your name...">
 
                 @if ($errors->has('name'))
                     <p class="text-danger">{{ $errors->first('name') }}</p>
@@ -64,7 +64,7 @@
 
             <div>
                 <label for="contactDetails">{{ __('Contact Details') }}</label>
-                <input type="text" name="contactDetails" value="{{ old('contactDetails') }}" class="form-control">
+                <input type="text" name="contactDetails" value="{{ old('contactDetails') }}" class="form-control" placeholder="Insert your contact details...">
 
                 @if ($errors->has('contactDetails'))
                     <p class="text-danger">{{ $errors->first('contactDetails') }}</p>

@@ -5,6 +5,7 @@
 @endsection
 
 @section('content')
+
     <p>{{ __('Name: ') . $order->name }}</p>
     <p>{{ __('Contact details: ') . $order->contact_details }}</p>
 
@@ -18,7 +19,7 @@
             </tr>
         </thead>
             
-        @foreach ($order->products as $product)
+        @foreach ($products as $product)
             <tr>
                 <td>
                     @if ($product->image)
@@ -32,7 +33,7 @@
                 </td>
                 <td>{{ $product->title }}</td>
                 <td>{{ $product->description }}</td>
-                <td>{{ $product->price }}</td>
+                <td>{{ $product->product_price }}</td>
             </tr>
         @endforeach
         <tr>

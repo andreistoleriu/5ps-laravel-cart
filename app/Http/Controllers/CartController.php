@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Product;
 use App\Order;
+use App\OrderProduct;
 use Hamcrest\Text\SubstringMatcher;
 
 class CartController extends Controller
@@ -72,7 +73,7 @@ class CartController extends Controller
         $data = request()->validate([
             'name' => 'required|min:3|max:255',
             'contactDetails' => 'required|min:3|max:255',
-            'comments' => 'min:3|max:255'
+            'comments' => 'min:0|max:255'
         ]);
 
         $cart = request()->session()->pull('cart');
@@ -85,7 +86,15 @@ class CartController extends Controller
         $order->price = $price;
         $order->save();
         
-        $order->products()->attach($cart);
+        foreach ($products as $product) {
+        OrderProduct::insert(
+            [
+            'order_id' => $order->id,
+            'product_id' => $product->id,
+            'product_price' => $product->price
+            ]
+        );
+    }
 
         Mail::to('example@test.com')->send(new Checkout($data, $products, $price));
 

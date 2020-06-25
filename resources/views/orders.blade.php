@@ -5,6 +5,7 @@
 @endsection
 
 @section('content')
+
     <h1>{{ __('Orders') }}</h1>
 
     <table class="table">
