@@ -32,14 +32,7 @@ class OrdersController extends Controller
     {
         $request = request('id');
         $order = Order::findOrFail($request);
-        $products = OrderProduct::where('order_id', $request)
-                    ->join('products', 'products.id', '=', 'product_id')
-                    ->select('products.*', 'order_product.order_id', 
-                    'order_product.product_id', 'order_product.product_price')
-                    ->get();
 
-        $price = $products->sum('product_price');
-
-        return view('order', compact('request', 'order', 'products','price'));
+       return view('order', compact('request', 'order'));
     }
 }

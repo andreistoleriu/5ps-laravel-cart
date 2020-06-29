@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Product;
 use App\Order;
-use App\OrderProduct;
 use Hamcrest\Text\SubstringMatcher;
 
 class CartController extends Controller
@@ -78,23 +77,15 @@ class CartController extends Controller
 
         $cart = request()->session()->pull('cart');
         $products = Product::query()->whereIn('id', $cart)->get();
+        
         $price = $products->sum('price');
-
         $order = new Order();
         $order->name = request()->input('name');
         $order->contact_details = request()->input('contactDetails');
         $order->price = $price;
         $order->save();
         
-        foreach ($products as $product) {
-        OrderProduct::insert(
-            [
-            'order_id' => $order->id,
-            'product_id' => $product->id,
-            'product_price' => $product->price
-            ]
-        );
-    }
+        $order->products()->attach($cart);
 
         Mail::to('example@test.com')->send(new Checkout($data, $products, $price));
 
