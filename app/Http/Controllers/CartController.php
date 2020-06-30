@@ -25,6 +25,7 @@ class CartController extends Controller
     public function addItemsToCart(Request $request)
     {
         $cart = $request->session()->get('cart', []);
+        
         if ($request->id && !in_array($request->id, $cart)) {
             $request->session()->push('cart', $request->id);
 

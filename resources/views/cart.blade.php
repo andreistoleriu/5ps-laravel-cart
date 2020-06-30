@@ -25,24 +25,24 @@
                 </tr>
             </thead>
             @foreach ($products as $product)
-            <form action="cart?id={{ $product->id }}" method="post">
-                @csrf
-                <tr>
-                    <td>
-                        @if ($product->image)
-                        <img src="{{ asset('storage/images/' . $product->image) }}" width="150px">
-                        @else
-                        {{ __('No image') }}
-                        @endif
-                    </td>
-                    <td>{{ $product->title }}</td>
-                    <td>{{ $product->description }}</td>
-                    <td>{{ $product->price }}</td>
-                    <td><input type="submit" name="delete" class="btn btn-danger" value="{{ __('Remove') }}"></td>
-                    <td><input type="hidden" name="id" value=" {{ $product->id }}"></td>
-                </tr>
-            </form>
-                @endforeach
+                <form action="cart?id={{ $product->id }}" method="post">
+                    @csrf
+                    <tr>
+                        <td>
+                            @if ($product->image)
+                                <img src="{{ asset('storage/images/' . $product->image) }}" width="150px">
+                            @else
+                                {{ __('No image') }}
+                            @endif
+                        </td>
+                        <td>{{ $product->title }}</td>
+                        <td>{{ $product->description }}</td>
+                        <td>{{ $product->price }}</td>
+                        <td><input type="submit" name="delete" class="btn btn-danger" value="{{ __('Remove') }}"></td>
+                        <td><input type="hidden" name="id" value=" {{ $product->id }}"></td>
+                    </tr>
+                </form>
+            @endforeach
             <tr>
                 <td colspan="3" align="middle"><strong>
                     {{ __('TOTAL') }}</strong>
