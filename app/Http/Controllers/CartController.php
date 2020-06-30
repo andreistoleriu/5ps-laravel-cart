@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Product;
 use App\Order;
-use Hamcrest\Text\SubstringMatcher;
 
 class CartController extends Controller
 {

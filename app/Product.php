@@ -14,4 +14,9 @@ class Product extends Model
     {
         return $this->belongsToMany(Order::class)->withTimestamps()->withPivot('product_price');
     }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class)->withTimestamps();
+    }
 }
