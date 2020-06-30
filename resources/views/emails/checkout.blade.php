@@ -1,9 +1,10 @@
 @component('mail::message')
-<strong>From:</strong>{{ $data['name'] }}<br />
-<strong>Contact Details:</strong>{{ $data['contactDetails'] }}<br />
-<strong>Comments:</strong>{{ $data['comments'] }}<br />
+<strong>{{ __('From') }}:</strong>{{ $data['name'] }}<br />
+<strong>{{ __('Contact Details:') }}</strong>{{ $data['contactDetails'] }}<br />
+<strong>{{ __('Comments:') }}</strong>{{ $data['comments'] }}<br />
 <br />
-<strong>Order:</strong>
+<strong>{{ __('Order:') }}</strong>
+
 @component('mail::table')
 <table border="1" cellpadding="3">
 <tr>
