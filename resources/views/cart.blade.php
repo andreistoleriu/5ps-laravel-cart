@@ -7,9 +7,9 @@
 @section('content')
     <h1>{{ __('Cart') }}</h1>
 
-    @if(!$cart)
-        @if(request()->has('success'))
-            <div class="p-3 mb-2 bg-success text-white">{{ __('Order sent!') }}</div>
+    @if (!$cart)
+        @if (session('status'))
+            <div class="p-3 mb-2 bg-success text-white">{{ session('status') }}</div>
         @endif
 
         <p class="text-danger">{{ __('Cart is empty') }}</p>
@@ -50,12 +50,12 @@
             </tr>
         </table>
         
-        <form method="POST" action="cart/checkout" class="form-group" >
+        <form method="POST" action="{{ route('checkout') }}" class="form-group" >
             @csrf
 
             <div>
                 <label for="name">{{ __('Name') }}</label>
-                <input type="text" name="name" value="{{ old('name') }}" class="form-control" placeholder="Insert your name...">
+                <input type="text" name="name" value="{{ old('name') }}" class="form-control" placeholder="{{ __('Insert your name...') }}">
 
                 @if ($errors->has('name'))
                     <p class="text-danger">{{ $errors->first('name') }}</p>
@@ -64,7 +64,7 @@
 
             <div>
                 <label for="contactDetails">{{ __('Contact Details') }}</label>
-                <input type="text" name="contactDetails" value="{{ old('contactDetails') }}" class="form-control" placeholder="Insert your contact details...">
+                <input type="text" name="contactDetails" value="{{ old('contactDetails') }}" class="form-control" placeholder="{{ __('Insert your contact details...') }}">
 
                 @if ($errors->has('contactDetails'))
                     <p class="text-danger">{{ $errors->first('contactDetails') }}</p>
@@ -73,7 +73,7 @@
 
             <div>
                 <label for="comments">{{ __('Comments') }}</label>
-                <textarea name="comments" class="form-control">{{ old('comments') }}</textarea>
+                <textarea name="comments" class="form-control">{{ old('comments') }} </textarea>
 
                 @if ($errors->has('comments'))
                     <p class="text-danger">{{ $errors->first('comments') }}</p>

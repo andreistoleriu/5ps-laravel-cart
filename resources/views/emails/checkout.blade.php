@@ -4,28 +4,14 @@
 <strong>{{ __('Comments:') }}</strong>{{ $data['comments'] }}<br />
 <br />
 <strong>{{ __('Order:') }}</strong>
-
 @component('mail::table')
-<table border="1" cellpadding="3">
-<tr>
-<th align="middle">{{ __('Title') }}</th>
-<th align="middle">{{ __('Description') }}</th>
-<th align="middle">{{ __('Price') }}</th>
-</tr>
 
+| {{ __('Title') }}     | {{ __('Description') }}     | {{ __('Price') }}     |
+|:---------------------:|:---------------------------:|:---------------------:|
 @foreach ($products as $product)
-<tr>
-<td align="middle">{{ $product->title }}</td>
-<td align="middle">{{ $product->description }}</td>
-<td align="middle">{{ $product->price }}</td>
-</tr>
+| {{ $product->title }} | {{ $product->description }} | {{ $product->price }} |
 @endforeach
-<tr>
-<td colspan="2" align="middle">
-{{ __('Price') }}
-</td>
-<td colspan="1" align="middle"><strong>{{ $price }}</strong></td>
-</tr>
-</table>
+|                       |   {{ __('Total Price')}}    |     {{ $price }}      |
+
 @endcomponent
 @endcomponent

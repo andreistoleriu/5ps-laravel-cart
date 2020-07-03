@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Order;
-use App\OrderProduct;
-use App\Product;
 
 class OrdersController extends Controller
 {

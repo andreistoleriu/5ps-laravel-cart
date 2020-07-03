@@ -24,15 +24,14 @@ class CartController extends Controller
 
     public function addItemsToCart(Request $request)
     {
-        $cart = $request->session()->get('cart', []);
-        
-        if ($request->id && !in_array($request->id, $cart)) {
-            $request->session()->push('cart', $request->id);
-
+        if (Product::where('id', '=', $request->input('id'))->exists()) {
+            $request->session()->push('cart', $request->input('id'));
             return redirect('/');
+        } else {
+            abort(404, 'Product not found!');
         }
     }
-    
+
     /**
      * View cart page
      *
@@ -47,9 +46,9 @@ class CartController extends Controller
         return view(
             'cart',
             [
-            'products' => $products,
-            'cart' => $cart,
-            'price' => $price,
+                'products' => $products,
+                'cart' => $cart,
+                'price' => $price,
             ]
         );
     }
@@ -58,40 +57,43 @@ class CartController extends Controller
     {
         $cart = $request->session()->pull('cart', []);
 
-        if (($key = array_search($request->id, $cart)) !== false) {
+        if (($key = array_search($request->input('id'), $cart)) !== false) {
             unset($cart[$key]);
         }
 
         session()->put('cart', $cart);
 
-        return redirect('/cart');
+        return redirect('cart');
     }
 
-    public function mail()
+    public function mail(Request $request)
     {
-        $data = request()->validate([
+        $data = $request->validate([
             'name' => 'required|min:3|max:255',
             'contactDetails' => 'required|min:3|max:255',
             'comments' => 'min:0|max:255'
         ]);
 
-        $cart = request()->session()->pull('cart');
+        $cart = $request->session()->pull('cart');
         $products = Product::query()->whereIn('id', $cart)->get();
-        
+
+
         $price = $products->sum('price');
         $order = new Order();
-        $order->name = request()->input('name');
-        $order->contact_details = request()->input('contactDetails');
+        $order->fill([
+            'name' => $request->input('name'),
+            'contact_details' => $request->input('contactDetails'),
+        ]);
         $order->price = $price;
         $order->save();
-        
+
         $order->products()->attach($cart);
 
-        Mail::to('example@test.com')->send(new Checkout($data, $products, $price));
+        Mail::to(config('mail.mail_to'))->send(new Checkout($data, $products, $price));
 
-        return redirect('/cart?success');
+        return redirect('cart')->with('status', 'Order has been sent!');
     }
-    
+
     /**
      * View login page
      *
@@ -103,15 +105,15 @@ class CartController extends Controller
         return view('login');
     }
 
-    public function auth()
+    public function auth(Request $request)
     {
         $errorMessage = [];
 
-        if (request()->input('name') !== config('admin.admin_name')) {
+        if ($request->input('name') !== config('admin.admin_name')) {
             $errorMessage['name'][] = __('The username is incorrect');
         }
 
-        if (request()->input('password') !== config('admin.admin_password')) {
+        if ($request->input('password') !== config('admin.admin_password')) {
             $errorMessage['password'][] = __('The password is incorrect');
         }
 
@@ -128,6 +130,6 @@ class CartController extends Controller
         session()->pull('auth');
         session()->put(['auth' => false]);
 
-        return redirect('/');
+        return redirect('index');
     }
 }
