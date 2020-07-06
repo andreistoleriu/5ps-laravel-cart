@@ -14,11 +14,7 @@ class ProductsController extends Controller
      */
     public function index()
     {
-        if (session('auth') === true) {
-            return view('products.index', ['products' => Product::all()]);
-        } else {
-            return redirect('/login?unauthorized');
-        }
+        return view('products.index', ['products' => Product::all()]);
     }
 
     /**

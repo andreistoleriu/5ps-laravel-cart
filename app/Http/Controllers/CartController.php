@@ -93,43 +93,4 @@ class CartController extends Controller
 
         return redirect('cart')->with('status', 'Order has been sent!');
     }
-
-    /**
-     * View login page
-     *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-
-    public function login()
-    {
-        return view('login');
-    }
-
-    public function auth(Request $request)
-    {
-        $errorMessage = [];
-
-        if ($request->input('name') !== config('admin.admin_name')) {
-            $errorMessage['name'][] = __('The username is incorrect');
-        }
-
-        if ($request->input('password') !== config('admin.admin_password')) {
-            $errorMessage['password'][] = __('The password is incorrect');
-        }
-
-        if (!$errorMessage) {
-            session(['auth' => true]);
-            return redirect('products');
-        } else {
-            return view('login', compact('errorMessage'));
-        }
-    }
-
-    public function logout()
-    {
-        session()->pull('auth');
-        session()->put(['auth' => false]);
-
-        return redirect('index');
-    }
 }

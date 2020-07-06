@@ -13,12 +13,9 @@ class OrdersController extends Controller
      */
     public function orders()
     {
-        if (session('auth') === true) {
-            $orders = Order::all();
-            return view('orders', compact('orders'));
-        } else {
-            return redirect('/login?unauthorized');
-        }
+        $orders = Order::all();
+        
+        return view('orders', compact('orders'));
     }
 
     /**
