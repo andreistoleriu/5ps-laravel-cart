@@ -15,8 +15,8 @@
                 <a class="nav-link" href="{{ '/' }}">{{ __('Home') }}</a>
                 <a class="nav-link" href="{{ '/cart' }}">{{__('Cart')}}</a>
                 @if(session()->has('auth') && session('auth'))
-                <a class="nav-link" href="{{ '/products' }}">{{__('Products')}}</a>
-                <a class="nav-link" href="{{ '/orders' }}">{{__('Orders')}}</a>
+                    <a class="nav-link" href="{{ '/products' }}">{{__('Products')}}</a>
+                    <a class="nav-link" href="{{ '/orders' }}">{{__('Orders')}}</a>
                 @endif
                 <a class="btn btn-warning" class="nav-link" href="{{ session('auth') ? '/logout' : '/login' }}">
                     {{ session('auth') ? __('Logout') : __('Login') }}

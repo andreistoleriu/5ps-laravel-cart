@@ -24,12 +24,10 @@ class CartController extends Controller
 
     public function addItemsToCart(Request $request)
     {
-        if (Product::where('id', '=', $request->input('id'))->exists()) {
-            $request->session()->push('cart', $request->input('id'));
-            return redirect('/');
-        } else {
-            abort(404, 'Product not found!');
-        }
+        Product::findOrFail($request->input('id'));
+        $request->session()->push('cart', $request->input('id'));
+
+        return redirect('/');
     }
 
     /**
@@ -76,17 +74,16 @@ class CartController extends Controller
 
         $cart = $request->session()->pull('cart');
         $products = Product::query()->whereIn('id', $cart)->get();
-
-
         $price = $products->sum('price');
+
         $order = new Order();
         $order->fill([
             'name' => $request->input('name'),
             'contact_details' => $request->input('contactDetails'),
+            'price' => $price,
         ]);
-        $order->price = $price;
         $order->save();
-
+        
         $order->products()->attach($cart);
 
         Mail::to(config('mail.mail_to'))->send(new Checkout($data, $products, $price));

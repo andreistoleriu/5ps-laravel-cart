@@ -25,7 +25,7 @@
                 </tr>
             </thead>
             @foreach ($products as $product)
-                <form action="cart?id={{ $product->id }}" method="post">
+            <form action={{ route('cart', $product->id) }} method="post">
                     @csrf
                     <tr>
                         <td>
