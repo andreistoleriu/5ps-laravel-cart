@@ -27,7 +27,7 @@ class CartController extends Controller
         Product::findOrFail($request->input('id'));
         $request->session()->push('cart', $request->input('id'));
 
-        return redirect('/');
+        return redirect()->route('index');
     }
 
     /**
@@ -61,7 +61,7 @@ class CartController extends Controller
 
         session()->put('cart', $cart);
 
-        return redirect('cart');
+        return redirect()->route('cart');
     }
 
     public function mail(Request $request)
@@ -88,6 +88,6 @@ class CartController extends Controller
 
         Mail::to(config('mail.mail_to'))->send(new Checkout($data, $products, $price));
 
-        return redirect('cart')->with('status', 'Order has been sent!');
+        return redirect()->route('cart')->with('status', 'Order has been sent!');
     }
 }

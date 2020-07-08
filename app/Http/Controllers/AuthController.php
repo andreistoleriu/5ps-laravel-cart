@@ -32,7 +32,7 @@ class AuthController extends Controller
         ]);
 
         session(['auth' => true]);
-        return redirect('products');
+        return redirect()->route('products.index');
     }
 
     /**
@@ -43,6 +43,6 @@ class AuthController extends Controller
         session()->pull('auth');
         session()->put(['auth' => false]);
 
-        return redirect('/');
+        return redirect()->route('index');
     }
 }

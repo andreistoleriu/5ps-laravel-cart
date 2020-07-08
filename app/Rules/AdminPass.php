@@ -39,6 +39,6 @@ class AdminPass implements Rule
      */
     public function message()
     {
-        return __('Wrong password');
+        return __('Invalid password');
     }
 }

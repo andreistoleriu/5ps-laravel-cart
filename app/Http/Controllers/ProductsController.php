@@ -40,13 +40,15 @@ class ProductsController extends Controller
         $fileNameToStore = $this->fileToUpload();
 
         $product = new Product;
-        $product->title = $request->input('title');
-        $product->description = $request->input('description');
-        $product->price = $request->input('price');
-        $product->image = $fileNameToStore;
+        $product->fill([
+            'title' => $request->input('title'),
+            'description' => $request->input('description'),
+            'price' => $request->input('price'),
+            'image' => $fileNameToStore,
+        ]);
         $product->save();
 
-        return redirect('/products');
+        return redirect()->route('products.index');
     }
 
     /**
@@ -57,7 +59,7 @@ class ProductsController extends Controller
      */
     public function show()
     {
-        return redirect('/products');
+        return redirect()->route('products.show');
     }
 
     /**
@@ -87,7 +89,7 @@ class ProductsController extends Controller
             $product->update(['image' => $fileNameToStore]);
         }
 
-        return redirect('/products');
+        return redirect()->route('products.index');
     }
 
     /**
@@ -100,7 +102,7 @@ class ProductsController extends Controller
     {
         $product->delete();
 
-        return redirect('/products');
+        return redirect()->route('products.index');
     }
 
     /**

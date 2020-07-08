@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', 'CartController@index');
+Route::get('/', 'CartController@index')->name('index');
 Route::post('/', 'CartController@addItemstoCart');
 
 Route::get('/cart', 'CartController@cart')->name('cart');
