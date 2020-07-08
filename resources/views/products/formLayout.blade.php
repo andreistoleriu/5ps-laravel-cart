@@ -3,7 +3,7 @@
     <input type="text" class="form-control" name="title" value="{{ $product ?? '' ? $product->title : old('title') }}">
 
     @if ($errors->has('title'))
-        <p>{{ $errors->first('title') }}</p>
+        <p class="text-danger">{{ $errors->first('title') }}</p>
     @endif
 </div>
 
@@ -12,7 +12,7 @@
     <textarea class="form-control" name="description" cols="30" rows="10">{{ $product ?? '' ? $product->description : old('description') }}</textarea>
 
     @if ($errors->has('description'))
-        <p>{{ $errors->first('description') }}</p>
+        <p class="text-danger">{{ $errors->first('description') }}</p>
     @endif
 </div>
 
@@ -21,7 +21,7 @@
     <input type="text" class="form-control" name="price" value="{{ $product ?? '' ? $product->price : old('price') }}">
 
     @if ($errors->has('price'))
-        <p>{{ $errors->first('price') }}</p>
+        <p class="text-danger">{{ $errors->first('price') }}</p>
     @endif
 </div>
 
@@ -30,7 +30,7 @@
     <input type="file" class="form-control" name="image">
 
     @if ($errors->has('image'))
-        <p>{{ $errors->first('image') }}</p>
+        <p class="text-warning">{{ $errors->first('image') }}</p>
     @endif
 </div>
 

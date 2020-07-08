@@ -5,7 +5,7 @@
 @endsection
 
 @section('content')
-    <form method="POST" action="/products" enctype="multipart/form-data" class="form-group">
+    <form method="POST" action={{ route('products.store') }} enctype="multipart/form-data" class="form-group">
         @csrf
 
         @include('products.formLayout')

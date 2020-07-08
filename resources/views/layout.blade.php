@@ -12,13 +12,13 @@
         <div class="container">
                
             <nav class="nav justify-content-center">
-                <a class="nav-link" href="{{ '/' }}">{{ __('Home') }}</a>
-                <a class="nav-link" href="{{ '/cart' }}">{{__('Cart')}}</a>
+                <a class="nav-link" href="{{ route('index') }}">{{ __('Home') }}</a>
+                <a class="nav-link" href="{{ route('cart') }}">{{__('Cart')}}</a>
                 @if(session()->has('auth') && session('auth'))
-                    <a class="nav-link" href="{{ '/products' }}">{{__('Products')}}</a>
-                    <a class="nav-link" href="{{ '/orders' }}">{{__('Orders')}}</a>
+                    <a class="nav-link" href="{{ route('products.index') }}">{{__('Products')}}</a>
+                    <a class="nav-link" href="{{ route('orders') }}">{{__('Orders')}}</a>
                 @endif
-                <a class="btn btn-warning" class="nav-link" href="{{ session('auth') ? '/logout' : '/login' }}">
+                <a class="btn btn-warning" class="nav-link" href="{{ session('auth') ? route('logout') : route('login') }}">
                     {{ session('auth') ? __('Logout') : __('Login') }}
                 </a>
             </nav>

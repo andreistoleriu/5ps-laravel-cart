@@ -16,7 +16,7 @@
     </thead>
 
     @forelse ($products as $product)
-        <form action="/" method="POST">
+        <form action="{{ route('index') }}" method="POST">
             @csrf
             <tr>
                 <td>

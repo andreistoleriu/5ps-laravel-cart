@@ -32,9 +32,9 @@
                     <td>{{ $product->title }}</td>
                     <td>{{ $product->description }}</td>
                     <td>{{ $product->price }}</td>
-                    <td><a class="btn btn-warning" href="products/{{ $product->id }}/edit">{{ __('Edit') }}</a></td>
+                    <td><a class="btn btn-warning" href="{{ route('products.edit', $product->id) }}">{{ __('Edit') }}</a></td>
                     <td>
-                        <form method="POST" action="/products/{{ $product->id }}">
+                        <form method="POST" action="{{ route('products.destroy', $product->id) }}">
                             @method('DELETE')
                             @csrf
 
@@ -50,6 +50,6 @@
             @endforelse
         </table>
         <div>
-            <a class="btn btn-primary" href="products/create">{{ __('Add a new product') }}</a>
+            <a class="btn btn-primary" href="{{ route('products.create') }}">{{ __('Add a new product') }}</a>
         </div>
 @endsection

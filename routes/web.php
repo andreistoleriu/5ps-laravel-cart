@@ -21,10 +21,10 @@ Route::post('/cart', 'CartController@removeItemsFromCart');
 Route::post('/cart/checkout', 'CartController@mail')->name('checkout');
 
 Route::get('/login', 'AuthController@login')->name('login');
-Route::get('/logout', 'AuthController@logout');
+Route::get('/logout', 'AuthController@logout')->name('logout');
 Route::post('/login', 'AuthController@auth');
 
-Route::get('/orders', 'OrdersController@orders')->middleware('admin.auth');
+Route::get('/orders', 'OrdersController@orders')->name('orders')->middleware('admin.auth');
 Route::get('/order', 'OrdersController@order')->middleware('admin.auth');
 
 Route::resource('products', 'ProductsController')->middleware('admin.auth');
