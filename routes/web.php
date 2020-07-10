@@ -17,7 +17,7 @@ Route::get('/', 'CartController@index')->name('index');
 Route::post('/', 'CartController@addItemstoCart');
 
 Route::get('/cart', 'CartController@cart')->name('cart');
-Route::post('/cart', 'CartController@removeItemsFromCart');
+Route::post('/cart', 'CartController@removeItemsFromCart')->name('cart.remove');
 Route::post('/cart/checkout', 'CartController@mail')->name('checkout');
 
 Route::get('/login', 'AuthController@login')->name('login');

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Order;
+use Illuminate\Http\Request;
 
 class OrdersController extends Controller
 {
@@ -23,11 +24,11 @@ class OrdersController extends Controller
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function order()
+    public function order(Request $request)
     {
-        $request = request('id');
-        $order = Order::findOrFail($request);
+        $order = Order::findOrFail($request->input('id'));
+        $price = $order->products()->sum('price');
 
-       return view('order', compact('request', 'order'));
+       return view('order', compact('request', 'price', 'order'));
     }
 }

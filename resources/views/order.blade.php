@@ -19,7 +19,7 @@
             </tr>
         </thead>
             
-        @foreach ($products as $product)
+        @foreach ($order->products as $product)
             <tr>
                 <td>
                     @if ($product->image)
@@ -33,7 +33,7 @@
                 </td>
                 <td>{{ $product->title }}</td>
                 <td>{{ $product->description }}</td>
-                <td>{{ $product->product_price }}</td>
+                <td>{{ $product->pivot->product_price }}</td>
             </tr>
         @endforeach
         <tr>

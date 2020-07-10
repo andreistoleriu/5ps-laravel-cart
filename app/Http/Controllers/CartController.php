@@ -61,7 +61,7 @@ class CartController extends Controller
 
         session()->put('cart', $cart);
 
-        return redirect()->route('cart');
+        return redirect()->route('cart.remove');
     }
 
     public function mail(Request $request)
