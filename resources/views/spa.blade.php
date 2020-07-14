@@ -4,7 +4,7 @@
     <!-- Load the jQuery JS library -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-    <meta name="csrf-token" content="{{ csrf_token() }}"/>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- Custom JS script -->
     <script type="text/javascript">         
@@ -186,6 +186,7 @@
 
                     case '#logout':
                     $.ajax('/logout', {
+                        type:'POST',
                         success: function() {
                             window.location = '/spa';
                         }
@@ -668,11 +669,11 @@
                 <a class="nav-link" href="#cart">{{ __('Cart') }}</a>
                 <a class="nav-link" href="#products">{{ __('Products') }}</a>
                 <a class="nav-link" href="#orders">{{ __('Orders') }}</a>
-                @if (request()->session()->has('auth') && session('auth'))
-                    <a class="btn btn-warning nav-link" id="logout-btn" href="#logout">{{ __('Logout') }}</a>
+                @auth
+                    <a class="btn btn-warning nav-link" id="logout-btn" href="#logout">{{ __('Logout') }}</a>   
                 @else
                     <a class="btn btn-warning nav-link" id="login-btn" href="#login">{{ __('Login') }}</a>
-                @endif
+                @endauth
             </nav>
 
             <!-- The index page -->
@@ -720,21 +721,46 @@
 
             <!-- The login page -->
             <div class="page login">
-                <form class="login-form">
-                    <div class="form-group">
-                        <label for="name">{{ __('Username') }}</label>
-                        <input type="text" class="form-control" id="username" placeholder="{{ __('Username') }}">
-                        <p class="username-error text-danger" style="display: none"></p>
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-header">{{ __('Login') }}</div>
+            
+                            <div class="card-body">
+                                <form class="login-form">
+                                    @csrf
+            
+                                    <div class="form-group row">
+                                        <label for="username" class="col-md-4 col-form-label text-md-right">{{ __('E-Mail Address') }}</label>
+            
+                                        <div class="col-md-6">
+                                            <input id="username" type="text" class="form-control" id="password" name="username" placeholder="{{ __('Password') }}">
+                                            <p class="username-error text-danger" style="display: none"></p>
+                                        </div>
+                                    </div>
+            
+                                    <div class="form-group row">
+                                        <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('Password') }}</label>
+            
+                                        <div class="col-md-6">
+                                            <input id="password" type="password" class="form-control" id="password" name="password" placeholder="{{ __('Password') }}">
+                                            <p class="password-error text-danger" style="display: none"></p>
+                                        </div>
+                                    </div>
+                        
+                                    <div class="form-group row mb-0">
+                                        <div class="col-md-8 offset-md-4">
+                                            <button type="submit" id="login-button" class="login-submit btn btn-primary">
+                                                {{ __('Login') }}
+                                            </button>
+            
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
                     </div>
-
-                    <div class="form-group">
-                        <label for="email">{{ __('Password') }}</label>
-                        <input type="password" class="form-control" id="password" placeholder="{{ __('Password') }}">
-
-                        <p class="password-error text-danger" style="display: none"></p>
-                    </div>
-                    <button type="submit" class="login-submit btn btn-primary">{{ __('Login') }}</button>
-                </form>
+                </div>
             </div>
 
             <!-- The products page -->
