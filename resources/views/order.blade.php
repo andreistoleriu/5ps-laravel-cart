@@ -39,7 +39,7 @@
         <tr>
             <td colspan="3" align="middle"><strong>
                 {{ __('TOTAL') }}</strong>
-            <td colspan="2"><strong>{{ $price }}</strong></td>
+            <td colspan="2"><strong>{{ $order->price }}</strong></td>
         </tr>
     </table>
 @endsection

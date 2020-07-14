@@ -18,14 +18,23 @@ class CartController extends Controller
     public function index(Request $request)
     {
         $cart = $request->session()->get('cart', []);
+        $products = Product::query()->whereNotIn('id', $cart)->get();
 
-        return view('index', ['products' => Product::query()->whereNotIn('id', $cart)->get()]);
+        if ($request->ajax()) {
+            return $products;
+        }
+
+        return view('index', compact('products'));
     }
 
     public function addItemsToCart(Request $request)
     {
         Product::findOrFail($request->input('id'));
         $request->session()->push('cart', $request->input('id'));
+
+        if ($request->ajax()) {
+            return ['success' => true];
+        }
 
         return redirect()->route('index');
     }
@@ -39,16 +48,18 @@ class CartController extends Controller
     {
         $cart = $request->session()->get('cart', []);
         $products = Product::query()->whereIn('id', $cart)->get();
-        $price = $products->sum('price');
+        
+        $result = [
+            'products' => $products,
+            'price' => $products->sum('price'),
+            'cart' => $cart ? true : false
+        ];
 
-        return view(
-            'cart',
-            [
-                'products' => $products,
-                'cart' => $cart,
-                'price' => $price,
-            ]
-        );
+        if ($request->ajax()) {
+            return $result;
+        }
+
+        return view('cart', $result);
     }
 
     public function removeItemsFromCart(Request $request)
@@ -72,21 +83,27 @@ class CartController extends Controller
             'comments' => 'min:0|max:255'
         ]);
 
-        $cart = $request->session()->pull('cart');
+        $cart = request()->session()->pull('cart');
         $products = Product::query()->whereIn('id', $cart)->get();
         $price = $products->sum('price');
-
+        
         $order = new Order();
         $order->fill([
             'name' => $request->input('name'),
             'contact_details' => $request->input('contactDetails'),
             'price' => $price,
-        ]);
+            ]);
         $order->save();
-        
+
         $order->products()->attach($cart);
 
         Mail::to(config('mail.mail_to'))->send(new Checkout($data, $products, $price));
+
+        if ($request->ajax()) {
+            return [
+               'success' => 'Mail sent'
+            ];
+        }
 
         return redirect()->route('cart')->with('status', 'Order has been sent!');
     }

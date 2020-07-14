@@ -12,9 +12,15 @@ class ProductsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return view('products.index', ['products' => Product::all()]);
+        $products = Product::all();
+
+        if ($request->ajax()) {
+            return $products;
+        }
+        
+        return view('products.index', compact('products'));
     }
 
     /**
@@ -22,8 +28,14 @@ class ProductsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
+        if ($request->ajax()) {
+            return [
+               'product' => true
+            ];
+        }
+
         return view('products.create');
     }
 
@@ -48,18 +60,13 @@ class ProductsController extends Controller
         ]);
         $product->save();
 
-        return redirect()->route('products.index');
-    }
+        if ($request->ajax()) {
+            return [
+                'success' => 'Product created'
+            ];
+        }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Product  $product
-     * @return \Illuminate\Http\Response
-     */
-    public function show()
-    {
-        return redirect()->route('products.show');
+        return redirect()->route('products.index');
     }
 
     /**
@@ -70,6 +77,10 @@ class ProductsController extends Controller
      */
     public function edit(Product $product)
     {
+        if (request()->ajax()) {
+            return $product;
+        }
+
         return view('products.edit', compact('product'));
     }
 
@@ -89,6 +100,12 @@ class ProductsController extends Controller
             $product->update(['image' => $fileNameToStore]);
         }
 
+        if (request()->ajax()) {
+            return [
+                'success' => 'Product updated'
+            ];
+        }
+
         return redirect()->route('products.index');
     }
 
@@ -101,6 +118,12 @@ class ProductsController extends Controller
     public function destroy(Product $product)
     {
         $product->delete();
+
+        if (request()->ajax()) {
+            return [
+                'product' => 'deleted'
+            ];
+        }
 
         return redirect()->route('products.index');
     }

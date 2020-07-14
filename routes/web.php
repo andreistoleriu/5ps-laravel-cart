@@ -13,6 +13,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/spa', function() {
+    return view('spa');
+});
+
 Route::get('/', 'CartController@index')->name('index');
 Route::post('/', 'CartController@addItemstoCart');
 
@@ -20,11 +24,10 @@ Route::get('/cart', 'CartController@cart')->name('cart');
 Route::post('/cart', 'CartController@removeItemsFromCart')->name('cart.remove');
 Route::post('/cart/checkout', 'CartController@mail')->name('checkout');
 
-Route::get('/login', 'AuthController@login')->name('login');
-Route::get('/logout', 'AuthController@logout')->name('logout');
-Route::post('/login', 'AuthController@auth');
+Route::get('/orders', 'OrdersController@orders')->name('orders')->middleware('auth');
+Route::get('/order', 'OrdersController@order')->middleware('auth');
 
-Route::get('/orders', 'OrdersController@orders')->name('orders')->middleware('admin.auth');
-Route::get('/order', 'OrdersController@order')->middleware('admin.auth');
+Route::resource('products', 'ProductsController')->middleware('auth');
 
-Route::resource('products', 'ProductsController')->middleware('admin.auth');
+Auth::routes();
+
