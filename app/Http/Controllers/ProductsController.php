@@ -75,9 +75,9 @@ class ProductsController extends Controller
      * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function edit(Product $product)
+    public function edit(Product $product, Request $request)
     {
-        if (request()->ajax()) {
+        if ($request->ajax()) {
             return $product;
         }
 
@@ -91,16 +91,16 @@ class ProductsController extends Controller
      * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function update(Product $product)
+    public function update(Product $product, Request $request)
     {
         $product->update($this->validateRequest());
 
-        if (request()->hasFile('image')) {
+        if ($request->hasFile('image')) {
             $fileNameToStore = $this->filetoUpload();
             $product->update(['image' => $fileNameToStore]);
         }
 
-        if (request()->ajax()) {
+        if ($request->ajax()) {
             return [
                 'success' => 'Product updated'
             ];
@@ -115,11 +115,11 @@ class ProductsController extends Controller
      * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Product $product)
+    public function destroy(Product $product, Request $request)
     {
         $product->delete();
 
-        if (request()->ajax()) {
+        if ($request->ajax()) {
             return [
                 'product' => 'deleted'
             ];
