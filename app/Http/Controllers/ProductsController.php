@@ -47,9 +47,9 @@ class ProductsController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validateRequest();
+        $this->validateRequest($request);
 
-        $fileNameToStore = $this->fileToUpload();
+        $fileNameToStore = $this->fileToUpload($request);
 
         $product = new Product;
         $product->fill([
@@ -93,10 +93,10 @@ class ProductsController extends Controller
      */
     public function update(Product $product, Request $request)
     {
-        $product->update($this->validateRequest());
+        $product->update($this->validateRequest($request));
 
         if ($request->hasFile('image')) {
-            $fileNameToStore = $this->filetoUpload();
+            $fileNameToStore = $this->filetoUpload($request);
             $product->update(['image' => $fileNameToStore]);
         }
 
@@ -133,9 +133,9 @@ class ProductsController extends Controller
      *
      * @return mixed
      */
-    public function validateRequest()
+    public function validateRequest(Request $request)
     {
-        return request()->validate([
+        return $request->validate([
             'title' => 'required|min:3',
             'description' => 'required|min:10',
             'price' => 'required|numeric',
@@ -143,15 +143,15 @@ class ProductsController extends Controller
         ]);
     }
 
-    public function filetoUpload()
+    public function filetoUpload(Request $request)
     {
-        if (request()->hasFile('image')) {
-            $filenameWithExt = request()->file('image')->getClientOriginalName();
+        if ($request->hasFile('image')) {
+            $filenameWithExt = $request->file('image')->getClientOriginalName();
             $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
-            $extension = request()->file('image')->getClientOriginalExtension();
+            $extension = $request->file('image')->getClientOriginalExtension();
             $fileNameToStore = $filename . '_' . time() . '.' . $extension;
 
-            request()->file('image')->storeAs('public/images', $fileNameToStore);
+            $request->file('image')->storeAs('public/images', $fileNameToStore);
         } else {
             $fileNameToStore = null;
         }
