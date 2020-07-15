@@ -25,7 +25,7 @@
                 <td>{{ $order->name }}</td>
                 <td>{{ $order->contact_details }}</td>
                 <td>{{ $order->price }}</td>
-                <td><a href="order?id={{ $order->id }}">{{ __('View Details') }}</a></td>
+                <td><a href="{{ route('order', ['id' => $order->id]) }}">{{ __('View Details') }}</a></td>
             </tr>
         @endforeach
     </table>
