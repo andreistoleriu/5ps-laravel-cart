@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use App\Product;
+use App\Order;
 
 class DatabaseSeeder extends Seeder
 {
@@ -11,6 +13,18 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // $this->call(UserSeeder::class);
+        factory(Product::class, 10)->create()->each(function($u) {
+            $u->orders()->save(factory(Order::class)->make());
+        });
+
+        $orders = Order::all();
+
+        Product::all()->each(function ($product) use ($orders) { 
+            $product->orders()->attach($orders->random(rand(2, 5))->pluck('id')->toArray(), 
+            [
+                'product_price' => $product->price,
+            ]
+            ); 
+        });
     }
 }

@@ -25,7 +25,7 @@ Route::post('/cart', 'CartController@removeItemsFromCart')->name('cart.remove');
 Route::post('/cart/checkout', 'CartController@mail')->name('checkout');
 
 Route::get('/orders', 'OrdersController@orders')->name('orders')->middleware('auth');
-Route::get('/order', 'OrdersController@order')->name('order')->middleware('auth');
+Route::get('/order', 'OrdersController@order')->middleware('auth');
 
 Route::resource('products', 'ProductsController')->middleware('auth');
 
