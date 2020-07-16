@@ -77,6 +77,7 @@ class ProductsController extends Controller
      */
     public function edit(Product $product, Request $request)
     {
+        dd($product);
         if ($request->ajax()) {
             return $product;
         }

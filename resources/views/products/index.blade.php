@@ -49,7 +49,8 @@
                 </tr>
             @endforelse
         </table>
-        <div>
+        <div div class="d-flex justify-content-around">
             <a class="btn btn-primary" href="{{ route('products.create') }}">{{ __('Add a new product') }}</a>
+            <a class="btn btn-warning" href="{{ route('comments.index') }}">{{ __('Manage comments') }}</a>
         </div>
 @endsection

@@ -25,7 +25,15 @@ Route::post('/cart', 'CartController@removeItemsFromCart')->name('cart.remove');
 Route::post('/cart/checkout', 'CartController@mail')->name('checkout');
 
 Route::get('/orders', 'OrdersController@orders')->name('orders')->middleware('auth');
-Route::get('/order', 'OrdersController@order')->middleware('auth');
+Route::get('/order', 'OrdersController@order')->name('order')->middleware('auth');
+
+Route::get('/product_details', 'CommentController@index')->name('productDetails');
+Route::post('/product_details', 'CommentController@insertComments');
+
+Route::get('/comments', 'CommentController@comments')->name('comments.index');
+Route::delete('/comments/{id}', 'CommentController@destroy')->name('comments.delete');
+Route::get('/comments_edit/{id}/edit', 'CommentController@edit')->name('comments.edit');
+Route::put('/comments/{id}', 'CommentController@update')->name('comments.update');
 
 Route::resource('products', 'ProductsController')->middleware('auth');
 

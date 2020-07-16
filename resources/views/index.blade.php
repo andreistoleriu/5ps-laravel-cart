@@ -30,6 +30,7 @@
                 <td>{{ $product->description }}</td>
                 <td>{{ $product->price }}</td>
                 <td><input type="submit" name="add" class="btn btn-primary" value=" {{ __('Add') }}"></td>
+                <td><a href="{{ route('productDetails', ['id' => $product->id]) }}" class="btn btn-warning"><?= __('View Details') ?></a></td>
                 <td><input type="hidden" name="id" value="{{ $product->id }}"></td>
             </tr>
         </form>

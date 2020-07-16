@@ -17,6 +17,6 @@ class Product extends Model
 
     public function comments()
     {
-        return $this->hasMany(Comment::class)->withTimestamps();
+        return $this->hasMany(Comment::class);
     }
 }
