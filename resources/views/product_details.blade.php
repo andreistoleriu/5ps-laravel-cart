@@ -30,7 +30,7 @@
     @endforeach
 
         <h6><? __('Add a comment:') ?></h6>
-        <form method="POST" class="form-group" action="{{ route('productDetails', ['id' => $product->id]) }}">
+        <form method="POST" class="form-group" action="{{ route('productDetails.create', ['id' => $product->id]) }}">
         @csrf
             <label for="add_comment"></label>
             <textarea name="comment" id="comment" cols="5" rows="5" class="form-control"></textarea>

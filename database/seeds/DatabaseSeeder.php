@@ -13,9 +13,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        factory(Product::class, 10)->create()->each(function($u) {
-            $u->orders()->save(factory(Order::class)->make());
-        });
+        factory(Product::class, 25)->create();
+        factory(Order::class, 50)->create(); 
 
         $orders = Order::all();
 

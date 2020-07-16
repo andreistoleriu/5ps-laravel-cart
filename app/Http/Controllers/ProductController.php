@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Product;
 use Illuminate\Http\Request;
 
-class ProductsController extends Controller
+class ProductController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -19,7 +19,7 @@ class ProductsController extends Controller
         if ($request->ajax()) {
             return $products;
         }
-        
+
         return view('products.index', compact('products'));
     }
 
@@ -32,7 +32,7 @@ class ProductsController extends Controller
     {
         if ($request->ajax()) {
             return [
-               'product' => true
+                'product' => true
             ];
         }
 
@@ -45,20 +45,16 @@ class ProductsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Product $product, Request $request)
     {
         $this->validateRequest($request);
 
-        $fileNameToStore = $this->fileToUpload($request);
-
-        $product = new Product;
-        $product->fill([
+        $product->create([
             'title' => $request->input('title'),
             'description' => $request->input('description'),
             'price' => $request->input('price'),
-            'image' => $fileNameToStore,
+            'image' => $this->storeImage($request),
         ]);
-        $product->save();
 
         if ($request->ajax()) {
             return [
@@ -77,7 +73,6 @@ class ProductsController extends Controller
      */
     public function edit(Product $product, Request $request)
     {
-        dd($product);
         if ($request->ajax()) {
             return $product;
         }
@@ -95,10 +90,10 @@ class ProductsController extends Controller
     public function update(Product $product, Request $request)
     {
         $product->update($this->validateRequest($request));
-
-        if ($request->hasFile('image')) {
-            $fileNameToStore = $this->filetoUpload($request);
-            $product->update(['image' => $fileNameToStore]);
+        
+        $image = $this->storeImage($request);
+        if ($image) {
+            $product->update(['image' => $image]);
         }
 
         if ($request->ajax()) {
@@ -134,7 +129,7 @@ class ProductsController extends Controller
      *
      * @return mixed
      */
-    public function validateRequest(Request $request)
+    protected function validateRequest(Request $request)
     {
         return $request->validate([
             'title' => 'required|min:3',
@@ -144,17 +139,16 @@ class ProductsController extends Controller
         ]);
     }
 
-    public function filetoUpload(Request $request)
+    protected function storeImage(Request $request)
     {
-        if ($request->hasFile('image')) {
+        if (!$request->hasFile('image')) {
+            $fileNameToStore = null;
+        } else {
             $filenameWithExt = $request->file('image')->getClientOriginalName();
             $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
             $extension = $request->file('image')->getClientOriginalExtension();
             $fileNameToStore = $filename . '_' . time() . '.' . $extension;
-
             $request->file('image')->storeAs('public/images', $fileNameToStore);
-        } else {
-            $fileNameToStore = null;
         }
 
         return $fileNameToStore;

@@ -22,20 +22,20 @@ Route::post('/', 'CartController@addItemstoCart');
 
 Route::get('/cart', 'CartController@cart')->name('cart');
 Route::post('/cart', 'CartController@removeItemsFromCart')->name('cart.remove');
-Route::post('/cart/checkout', 'CartController@mail')->name('checkout');
+Route::post('/cart/checkout', 'CartController@mail')->name('cart.checkout');
 
-Route::get('/orders', 'OrdersController@orders')->name('orders')->middleware('auth');
-Route::get('/order', 'OrdersController@order')->name('order')->middleware('auth');
+Route::get('/orders', 'OrderController@index')->name('orders.index')->middleware('auth');
+Route::get('/orders/{order}', 'OrderController@show')->name('orders.show')->middleware('auth');
 
-Route::get('/product_details', 'CommentController@index')->name('productDetails');
-Route::post('/product_details', 'CommentController@insertComments');
+Route::get('/product_details', 'CommentController@index')->name('productDetails.index');
+Route::post('/product_details', 'CommentController@create')->name('productDetails.create');
 
-Route::get('/comments', 'CommentController@comments')->name('comments.index');
-Route::delete('/comments/{id}', 'CommentController@destroy')->name('comments.delete');
-Route::get('/comments_edit/{id}/edit', 'CommentController@edit')->name('comments.edit');
-Route::put('/comments/{id}', 'CommentController@update')->name('comments.update');
+Route::get('/comments', 'CommentController@comments')->name('comments.index')->middleware('auth');
+Route::delete('/comments/{comment}', 'CommentController@destroy')->name('comments.destroy')->middleware('auth');
+Route::get('/comments_edit/{comment}/edit', 'CommentController@edit')->name('comments.edit')->middleware('auth');
+Route::put('/comments/{comment}', 'CommentController@update')->name('comments.update')->middleware('auth');
 
-Route::resource('products', 'ProductsController')->middleware('auth');
+Route::resource('products', 'ProductController')->middleware('auth');
 
 Auth::routes();
 

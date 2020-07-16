@@ -6,8 +6,8 @@
 
 @section('content')
 
-    <p>{{ __('Name: ') . $order->name }}</p>
-    <p>{{ __('Contact details: ') . $order->contact_details }}</p>
+    <p>{{ __('Name: ') }} <span>{{ $order->name }}</span></p>
+    <p>{{ __('Contact details: ') }} <span>{{ $order->contact_details }}</span></p>
 
     <table class="table">
         <thead class="thead-dark">

@@ -29,17 +29,14 @@ class CommentController extends Controller
         );
     }
 
-    public function insertComments(Request $request) 
+    public function create(Request $request) 
     {
-        $comment = new Comment();
-        $comment->fill([
+        Comment::create([
             'product_id' => $request->input('id'),
             'message' => $request->input('comment'),
         ]);
-        $comment->save();
 
-        // return redirect("/product_details?id=$request->id");
-        return redirect()->route('productDetails', ['id' => $request->id]);
+        return redirect()->route('productDetails.index', ['id' => $request->id]);
     }
 
     public function comments(Request $request)
@@ -58,23 +55,20 @@ class CommentController extends Controller
         ]);
     }
 
-    public function destroy($id)
+    public function destroy(Comment $comment)
     {
-        $comment = Comment::findOrFail($id);
         $comment->delete();
         
         return redirect()->route('comments.index');
     }
 
-    public function edit($id)
+    public function edit(Comment $comment)
     {
-        $comment = Comment::findOrFail($id);
         return view('comments_edit', ['comment' => $comment]);
     }
 
-    public function update($id)
+    public function update(Comment $comment)
     {
-        $comment = Comment::findOrFail($id);
         $comment->update($this->validateRequest());
 
         return redirect()->route('comments.index');

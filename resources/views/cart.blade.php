@@ -50,7 +50,7 @@
             </tr>
         </table>
         
-        <form method="POST" action="{{ route('checkout') }}" class="form-group" >
+        <form method="POST" action="{{ route('cart.checkout') }}" class="form-group" >
             @csrf
 
             <div>

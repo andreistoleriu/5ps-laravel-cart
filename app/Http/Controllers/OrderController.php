@@ -5,14 +5,14 @@ namespace App\Http\Controllers;
 use App\Order;
 use Illuminate\Http\Request;
 
-class OrdersController extends Controller
+class OrderController extends Controller
 {
     /**
      * View orders page
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function orders(Request $request)
+    public function index(Request $request)
     {
         $orders = Order::all();
 
@@ -28,15 +28,10 @@ class OrdersController extends Controller
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function order(Request $request)
-    {
-        $order = Order::findOrFail($request->input('id'));
-        $products = $order->products;
-
-
+    public function show(Order $order, Request $request)
+    {   
         $result = [
-            'products' => $products,
-            'totalPrice' => $order->products()->sum('price'),
+            'totalPrice' => $order->price,
             'order' => $order,
         ];
 
@@ -45,7 +40,5 @@ class OrdersController extends Controller
         }
 
         return view('order', $result);
-
-       return view('order', compact('request', 'price', 'order'));
     }
 }

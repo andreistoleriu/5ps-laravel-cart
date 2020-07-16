@@ -18,7 +18,7 @@
         <p> {{ __('Date:') }} {{ $comment->created_at }}</p>
         <p> {{ __('Message:') }} {{ $comment->message }}
         <a href="{{ route('comments.edit', $comment->cid) }}" class="edit-btn btn btn-warning">{{__('Edit')}}</a>
-        <form method="POST" action="{{ route('comments.delete', $comment->cid) }}" class="form-group">
+        <form method="POST" action="{{ route('comments.destroy', $comment->cid) }}" class="form-group">
             @method('DELETE')
             @csrf
             <input type="submit" name="delete" class="btn btn-danger" value= "{{__('Delete')}}" />

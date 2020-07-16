@@ -26,7 +26,7 @@
                     <a class="nav-link" href="{{ route('cart') }}">{{__('Cart')}}</a>
                     @auth
                         <a class="nav-link" href="{{ route('products.index') }}">{{__('Products')}}</a>
-                        <a class="nav-link" href="{{ route('orders') }}">{{__('Orders')}}</a>
+                        <a class="nav-link" href="{{ route('orders.index') }}">{{__('Orders')}}</a>
                     @endauth
                 </ul>
 
