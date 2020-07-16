@@ -97,14 +97,6 @@ class CartController extends Controller
 
         $order->products()->attach($cart);
 
-        // $products->each(function ($product) use ($cart) { 
-        //     $->products()->attach($cart, 
-        //     [
-        //         'product_price' => $product->price,
-        //     ]
-        //     ); 
-        // });
-
         Mail::to(config('mail.mail_to'))->send(new Checkout($data, $products, $price));
 
         if ($request->ajax()) {

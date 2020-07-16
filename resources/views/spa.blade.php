@@ -140,13 +140,6 @@
                 return html;
             }
 
-            // Auth middleware
-            function redirectUnauthorised (response) {
-                if (response.unauthorised) {
-                    window.location.hash = '#login';
-                }
-            }
-
             /**
             * URL hash change handler
             */
@@ -197,7 +190,7 @@
                             $.ajax('/products', {
                                 dataType: 'json',
                                 success: function (response) {
-                                    // redirectUnauthorised(response);
+                                    redirectUnauthorised(response);
                                     $('.products').show();
                                     $('.products .list').html(renderList(response));
                                 },
