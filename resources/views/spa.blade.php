@@ -133,6 +133,13 @@
                 html += '</table>'
                 return html;
             }
+
+            function redirectUnauthorised (response) {
+                if (response.status === 401) {
+                    window.location.hash = '#login';
+                }
+            };
+
             /**
             * URL hash change handler
             */
@@ -180,9 +187,9 @@
                                     $('.products').show();
                                     $('.products .list').html(renderList(response));
                                 },
-                                error: function (error) {
-                                  console.log(error);
-                            }
+                                error: function (response) {
+                                    redirectUnauthorised(response);
+                                }
                             })
                     break;
                     case '#product':
@@ -198,8 +205,11 @@
                                             $('.products-create-edit').show();
                                             $('.product-update').hide();
                                             $('.product-create').show();
-                                       }
-                                   })
+                                       },
+                                       error: function (response) {
+                                            redirectUnauthorised(response);
+                                        }
+                                    })
                                }
                             }
                             if (locationHash[2] === 'edit') {
@@ -216,6 +226,9 @@
                                         $('#description').val(response.description);
                                         $('#price').val(response.price);
                                         $('#product-id').val(response.id);
+                                    },
+                                    error: function (response) {
+                                        redirectUnauthorised(response);
                                     }
                                 })
                             }
@@ -227,20 +240,17 @@
                                 $('.orders').show();
                                 $('.orders .orders-list').html(renderOrders(response));
                             },
-                            error: function (error) {
-                                console.log(error);
+                            error: function (response) {
+                                redirectUnauthorised(response);
                             }
                         });
-                        break;
+                        break;php
                     case '#order':
                         // Show the individual order page
                         $('.order').show();
                         if (locationHash.length > 1) {
-                            $.ajax('/order', {
+                            $.ajax('{{route('orders.index')}}' + '/' + locationHash[1], {
                                 dataType: 'json',
-                                data: {
-                                    id: locationHash[1]
-                                },
                                 success: function (response) {
                                     $('.order .order-view').append('<p><strong>{{ __('ID') . ': ' }}</strong>' + response.order.id + '</p>')
                                     $('.order .order-view').append('<p><strong>{{ __('Name') . ': ' }}</strong>' + response.order.name + '</p>')
@@ -251,8 +261,8 @@
                                     $('.table').append('<td><strong>' + response.totalPrice + '<td')
                                     $('.table').append('</tr>')
                                 },
-                                error: function (error) {
-                                    console.log(error);
+                                error: function (response) {
+                                    redirectUnauthorised(response);
                                 }
                             })
                         }
@@ -421,9 +431,6 @@
                     success: function () {
                         window.onhashchange();
                     },
-                    error: function (error) {
-                        console.log(error);
-                    }
                 });
             })
         // Redirect to product edit page
@@ -584,7 +591,6 @@
         // Delete product from database functionality
         $(document).on('click', '.delete-comment', function () {
         let id = $(this).data('id');
-        console.log(id);
         $.ajax(`comments/${id}`, {
             type: 'DELETE',
             data: {
@@ -594,9 +600,6 @@
             success: function () {
                 window.onhashchange();
             },
-            error: function (error) {
-                console.log(error);
-            }
         });
     })
     </script>
