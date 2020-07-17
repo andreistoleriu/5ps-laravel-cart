@@ -101,7 +101,7 @@ class CartController extends Controller
 
         if ($request->ajax()) {
             return [
-               'success' => 'Mail sent'
+               'success' => 'Order has been sent! Thank you!'
             ];
         }
 

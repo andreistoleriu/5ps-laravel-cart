@@ -26,7 +26,6 @@
             */
             function renderList(products, price) {
                 let locationHash = window.location.hash;
-
                 html = [
                     '<table class="table">',
                         '<thead class="thead-dark">',
@@ -35,7 +34,6 @@
                                 '<th>{{ __('Title') }}</th>',
                                 '<th>{{ __('Description') }}</th>',
                                 '<th>{{ __('Price') }}</th>'].join('')
-
                         if (locationHash[0] = '#products') {
                             html += [
                             '<th colspan="2">{{ __('Action') }}</th>',
@@ -60,7 +58,6 @@
                         '<td>' + product.title + '</td>',
                         '<td>' + product.description + '</td>',
                         '<td>' + product.price + '</td>'].join('');
-
                     switch (locationHash) {
                         case('#cart'):
                             html += '<td><button class="remove-from-cart btn btn-danger" data-id="' + product.id + '">{{ __('Remove') }}</button></td>';
@@ -74,7 +71,6 @@
                     };
                     html += '</tr>';
                 });
-
                 if (locationHash === '#cart' && price) {
                     html += [
                         '<tr>',
@@ -86,7 +82,6 @@
                 }
                 return html;
             };
-
             // A function that takes an orders array and renders it's html
             function renderOrders (orders) {
                     let html = [
@@ -115,7 +110,6 @@
                     html += '</table>';
                     return html;
                 }
-
             // A function that renders the individual order's products
             function renderOrderView (order) {
                 html = [
@@ -139,16 +133,13 @@
                 html += '</table>'
                 return html;
             }
-
             /**
             * URL hash change handler
             */
             window.onhashchange = function () {
                 // First hide all the pages
                 $('.page').hide();
-
                 let locationHash = window.location.hash.split('/');
-
                 switch(locationHash[0]) {
                     case '#cart':
                         // Show the cart page
@@ -162,7 +153,6 @@
                                     $('.cart .checkout-form').hide();
                                     // Don't render the products if there is nothing in the cart
                                     $('.cart .list').html('<p class="text-danger">{{ __('Cart is empty') }}</p>')
-
                                 } else {
                                     //Render the checkout form
                                     $('.cart .checkout-form').css('display', 'block');
@@ -172,11 +162,9 @@
                             }
                         });
                         break;
-
                     case '#login':
                         $('.login').show();
                     break;
-
                     case '#logout':
                     $.ajax('/logout', {
                         type:'POST',
@@ -185,12 +173,10 @@
                         }
                     })
                     break;
-
                     case '#products':
                             $.ajax('/products', {
                                 dataType: 'json',
                                 success: function (response) {
-                                    redirectUnauthorised(response);
                                     $('.products').show();
                                     $('.products .list').html(renderList(response));
                                 },
@@ -199,7 +185,6 @@
                             }
                             })
                     break;
-
                     case '#product':
                             if (locationHash.length > 1) {
                                 $('.page').hide();
@@ -210,7 +195,6 @@
                                    $.ajax('/products/create', {
                                        dataType: 'json',
                                        success: function (response) {
-                                            redirectUnauthorised(response);
                                             $('.products-create-edit').show();
                                             $('.product-update').hide();
                                             $('.product-create').show();
@@ -225,12 +209,9 @@
                                 $.ajax('/products/' + locationHash[1] + '/edit', {
                                     dataType: 'json',
                                     success: function (response) {
-                                        redirectUnauthorised(response);
-
                                         $('.products-create-edit').show();
                                         $('.product-update').show();
                                         $('.product-create').hide();
-
                                         $('#title').val(response.title);
                                         $('#description').val(response.description);
                                         $('#price').val(response.price);
@@ -243,7 +224,6 @@
                         $.ajax('/orders', {
                             dataType: 'json',
                             success: function (response) {
-                                redirectUnauthorised(response);
                                 $('.orders').show();
                                 $('.orders .orders-list').html(renderOrders(response));
                             },
@@ -262,13 +242,10 @@
                                     id: locationHash[1]
                                 },
                                 success: function (response) {
-                                    redirectUnauthorised(response);
-
                                     $('.order .order-view').append('<p><strong>{{ __('ID') . ': ' }}</strong>' + response.order.id + '</p>')
                                     $('.order .order-view').append('<p><strong>{{ __('Name') . ': ' }}</strong>' + response.order.name + '</p>')
                                     $('.order .order-view').append('<p><strong>{{ __('Contact details') . ': ' }}</strong>' + response.order.contact_details + '</p>')
                                     $('.order .order-list').html(renderOrderView(response.products))
-
                                     $('.table').append('<tr>')
                                     $('.table').append('<td colspan="3" align="center"><strong>{{ __('Total Price') . ': '}}</strong></tr>')
                                     $('.table').append('<td><strong>' + response.totalPrice + '<td')
@@ -280,7 +257,6 @@
                             })
                         }
                         break;
-
                     default:
                         // If all else fails, always default to index
                         // Show the index page
@@ -303,13 +279,11 @@
                 }
                 window.onhashchange();
             });
-
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
-
             // add products to cart
             $(document).on('click', '.add-to-cart', function () {
                 $.ajax('/', {
@@ -323,7 +297,6 @@
                     }
                 });
             });
-
             // remove products from cart
             $(document).on('click', '.remove-from-cart', function () {
                 $.ajax('/cart', {
@@ -337,18 +310,14 @@
                     }
                 });
             });
-
         //checkout form functionality
         $(document).on('click', '.submit', function (e) {
             e.preventDefault();
-
             let data = new FormData();
             data.append('name', $('input[id=name]').val());
             data.append('contactDetails', $('input[id=contactDetails]').val());
             data.append('comments', $('textarea[id=comments]').val());
-
             $('.submit').prop('disabled', true);
-
             $.ajax('/cart/checkout', {
                 type: 'POST',
                 data: data,
@@ -366,54 +335,42 @@
             error: function (error) {
                 $('.submit').prop('disabled', false);
                 $('.submit').html('{{ __('Checkout') }}');
-
                 let errorMessage = JSON.parse(error.responseText)
-
                 if (errorMessage.errors.hasOwnProperty('name')) {
                     let nameErr = $('.name-error');
                     nameErr.css('display', 'block');
                     nameErr.html(errorMessage.errors['name']);
-
                     $('#name').addClass('is-invalid');
                 }
-
                 if (errorMessage.errors.hasOwnProperty('contactDetails')) {
                     let contactDetailsErr = $('.contactDetails-error');
                     contactDetailsErr.css('display', 'block');
                     contactDetailsErr.html(errorMessage.errors['contactDetails']);
-
                     $('#contactDetails').addClass('is-invalid');
                 }
-
                 if (errorMessage.errors.hasOwnProperty('comments')) {
                     let commentsErr = $('.comments-error');
                     commentsErr.css('display', 'block');
                     commentsErr.html(errorMessage.errors['comments']);
-
                     $('#comments').addClass('is-invalid');
                 }
             }
         })
-
             $('input[id=name]').keypress(function() {
                 $('.name-error').hide();
                 $('#name').removeClass('is-invalid');
             });
-
             $('input[id=contactDetails]').keypress(function() {
                 $('.contactDetails-error').hide();
                 $('#contactDetails').removeClass('is-invalid');
             });
         });
-
         // Handle login functionality
         $(document).on('click', '.login-submit', function (e) {
             e.preventDefault();
-
             let data = new FormData();
             data.append('username', $('input[id=username]').val());
             data.append('password', $('input[id=password]').val());
-
             $.ajax('/login', {
                 type: 'POST',
                 data: data,
@@ -425,6 +382,7 @@
                     $('#login-btn').attr('id', 'logout-btn');
                     $('#logout-btn').html('{{ __('Logout') }}');
                     window.location.hash = '#products';
+                    window.location.reload();
                 },
                 error: function (error) {
                     let errorMessage = JSON.parse(error.responseText)
@@ -451,7 +409,6 @@
                 $('#password').removeClass('is-invalid');
             });
         });
-
         // Delete product from database functionality
         $(document).on('click', '.delete-product', function () {
                 let id = $(this).data('id');
@@ -469,13 +426,11 @@
                     }
                 });
             })
-
         // Redirect to product edit page
         $(document).on('click', '.edit-product', function () {
             let id = $(this).data('id');
             window.location.hash = `#product/${id}/edit`;
         })
-
         // View the individual order
         $(document).on('click', '.view-order', function () {
             let id = $(this).data('id');
@@ -483,16 +438,13 @@
             $('.order .order-list').empty();
             window.location.hash = `#order/${id}`;
         });
-
         // Product create functionality
         $(document).on('click', '.product-create', function (e) {
             e.preventDefault();
-
             let data = new FormData();
             data.append('title', $('input[id=title]').val());
             data.append('description', $('input[id=description]').val());
             data.append('price', $('input[id=price]').val());
-
             if ($('#image').get(0).files.length !== 0) {
                 data.append('image', $('#image')[0].files[0]);
             }
@@ -557,17 +509,14 @@
                 $('#price').removeClass('is-invalid');
             });
         });
-
         // Product update functionality
         $(document).on('click', '.product-update', function (e) {
             e.preventDefault();
-
             let data = new FormData();
             data.append('_method', 'PUT');
             data.append('title', $('input[id=title]').val());
             data.append('description', $('input[id=description]').val());
             data.append('price', $('input[id=price]').val());
-
             if ($('#image').get(0).files.length !== 0) {
                 data.append('image', $('#image')[0].files[0]);
             }
@@ -632,7 +581,6 @@
                 $('#price').removeClass('is-invalid');
             });
         });
-
         // Delete product from database functionality
         $(document).on('click', '.delete-comment', function () {
         let id = $(this).data('id');
@@ -651,7 +599,6 @@
             }
         });
     })
-
     </script>
     </head>
     <body>
