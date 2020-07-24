@@ -7,7 +7,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- Custom JS script -->
-    <script type="text/javascript">         
+    <script type="text/javascript">
         $(document).ready(function () {
             
             /**
@@ -24,24 +24,23 @@
             *     "price": 2
             * }]
             */
-            function renderList(products, price) {
-                let locationHash = window.location.hash;
+            function renderList(locationHash, products, price) {
                 html = [
                     '<table class="table">',
                         '<thead class="thead-dark">',
                             '<tr>',
                                 '<th></th>',
-                                '<th>{{ __('Title') }}</th>',
-                                '<th>{{ __('Description') }}</th>',
-                                '<th>{{ __('Price') }}</th>'].join('')
+                                '<th> Title </th>',
+                                '<th> Description </th>',
+                                '<th> Price </th>'].join('')
                         if (locationHash[0] = '#products') {
                             html += [
-                            '<th colspan="2">{{ __('Action') }}</th>',
+                            '<th colspan="2"> Action </th>',
                             '</tr>'
                             ].join('');
                         } else {
                             html += [
-                            '<th>{{ __('Action') }}</th>',
+                            '<th> Action </th>',
                             '</tr>',
                             '</thead>'
                             ].join('');
@@ -50,7 +49,7 @@
                 $.each(products, function (key, product) {
                     html += '<tr>';
                     if (!product.image) {
-                        html += '<td>{{ __('No image available') }}</td>'
+                        html += '<td> No image available </td>'
                     } else {
                         html += '<td><img src="storage/images/' + product.image + '" width="150px"></td>';
                     }
@@ -60,21 +59,22 @@
                         '<td>' + product.price + '</td>'].join('');
                     switch (locationHash) {
                         case('#cart'):
-                            html += '<td><button class="remove-from-cart btn btn-danger" data-id="' + product.id + '">{{ __('Remove') }}</button></td>';
+                            html += '<td><button class="remove-from-cart btn btn-danger" data-id="' + product.id + '"> Remove </button></td>';
                             break;
                         case('#products'):
-                            html += '<td><button class="edit-product btn btn-warning" data-id="' + product.id + '">{{ __('Edit') }}</button></td>';
-                            html += '<td><button class="delete-product btn btn-danger" data-id="' + product.id + '">{{ __('Delete') }}</button></td>';                    
+                            html += '<td><button class="edit-product btn btn-warning" data-id="' + product.id + '"> Edit </button></td>';
+                            html += '<td><button class="delete-product btn btn-danger" data-id="' + product.id + '"> Delete </button></td>';                    
                             break;
                         default:
-                            html += '<td><button class="add-to-cart btn btn-primary" data-id="' + product.id + '">{{ __('Add to cart') }}</button></td>';
+                            html += '<td><button class="add-to-cart btn btn-primary" data-id="' + product.id + '"> Add to cart </button></td>';
+                            html += '<td><button class="view-details btn btn-warning" data-id="' + product.id + '"> View Details </button></td>';
                     };
                     html += '</tr>';
                 });
                 if (locationHash === '#cart' && price) {
                     html += [
                         '<tr>',
-                            '<td colspan="3"><strong>{{ __('Total Price') }}</strong></td>',
+                            '<td colspan="3"><strong> Total price </strong></td>',
                             '<td colspan="2">' + price + '</td>',
                         '</tr>',
                         '</table>'
@@ -88,11 +88,11 @@
                         '<table class="table">',
                             '<thead class="thead-dark">',
                                 '<tr>',
-                                    '<th>{{ __('Order ID') }}</th>',
-                                    '<th>{{ __('Name') }}</th>',
-                                    '<th>{{ __('Contact details') }}</th>',
-                                    '<th>{{ __('Price') }}</th>',
-                                    '<th>{{ __('Action') }}</th>',
+                                    '<th> Order ID </th>',
+                                    '<th> Name </th>',
+                                    '<th> Contact Details </th>',
+                                    '<th> Price </th>',
+                                    '<th> Action </th>',
                                 '</tr>',
                             '</thead>',
                             ].join('')
@@ -103,7 +103,7 @@
                                 '<td>' + order.name + '</td>',
                                 '<td>' + order.contact_details + '</td>',
                                 '<td>' + order.price + '</td>',
-                                '<td><button class="view-order btn btn-primary" data-id="' + order.id + '">{{ __('View details') }}</button></td>',
+                                '<td><button class="view-order btn btn-primary" data-id="' + order.id + '"> View details </button></td>',
                             '</tr>',
                         ].join('');
                     })
@@ -112,14 +112,18 @@
                 }
             // A function that renders the individual order's products
             function renderOrderView (order) {
+                console.log(order);
                 html = [
+                    '<p><strong> ID: </strong>' + order.id + '</p>',
+                    '<p><strong>Name: </strong>' + order.name + '</p>',
+                    '<p><strong>Contact details: </strong>' + order.contact_details + '</p>',
                     '<table class="table">',
                         '<thead class="thead-dark">',
                             '<tr>',
-                                '<th>{{ __('Image') }}</th>',
-                                '<th>{{ __('Title') }}</th>',
-                                '<th>{{ __('Description') }}</th>',
-                                '<th>{{ __('Price') }}</th>'].join('')
+                                '<th> Image </th>',
+                                '<th> Title </th>',
+                                '<th> Description </th>',
+                                '<th> Price </th>'].join('')
                 $.each(order, function(key, product) {
                     html += [
                         '<tr>',
@@ -127,6 +131,9 @@
                             '<td>' + product.title + '</td>',
                             '<td>' + product.description + '</td>',
                             '<td>' + product.price + '</td>',
+                        '</tr>',
+                        '<tr>',
+                            '<td colspan="3" align="center"><strong>Total price: </strong></tr>',
                         '</tr>'
                     ].join('');
                 })
@@ -155,20 +162,21 @@
                         $.ajax('/cart', {
                             dataType: 'json',
                             success: function (response) {
-                                if (response.cart === false) {
-                                    //Don't render the checkout form
-                                    $('.cart .checkout-form').hide();
-                                    // Don't render the products if there is nothing in the cart
-                                    $('.cart .list').html('<p class="text-danger">{{ __('Cart is empty') }}</p>')
-                                } else {
+                                if (response.cart) {
                                     //Render the checkout form
                                     $('.cart .checkout-form').css('display', 'block');
                                     // Render the products in the cart list
-                                    $('.cart .list').html(renderList(response.products, response.price));
+                                    $('.cart .list').html(renderList(window.location.hash, response.products, response.price));
+                                } else {
+                                    //Don't render the checkout form
+                                    $('.cart .checkout-form').hide();
+                                    // Don't render the products if there is nothing in the cart
+                                    $('.cart .list').html('<p class="text-danger"> Cart is empty </p>')
+
                                 }
                             }
                         });
-                        break;
+                    break;
                     case '#login':
                         $('.login').show();
                     break;
@@ -176,7 +184,7 @@
                     $.ajax('/logout', {
                         type:'POST',
                         success: function() {
-                            window.location = '/spa';
+                            window.location.hash = '#'
                         }
                     })
                     break;
@@ -185,7 +193,7 @@
                                 dataType: 'json',
                                 success: function (response) {
                                     $('.products').show();
-                                    $('.products .list').html(renderList(response));
+                                    $('.products .list').html(renderList(window.location.hash, response));
                                 },
                                 error: function (response) {
                                     redirectUnauthorised(response);
@@ -193,45 +201,39 @@
                             })
                     break;
                     case '#product':
-                            if (locationHash.length > 1) {
-                                $('.page').hide();
-                               if (locationHash[1] === 'create') {
-                                   $('.product-form').each(function () {
-                                       this.reset();
-                                   })
-                                   $.ajax('/products/create', {
-                                       dataType: 'json',
-                                       success: function (response) {
-                                            $('.products-create-edit').show();
-                                            $('.product-update').hide();
-                                            $('.product-create').show();
-                                       },
-                                       error: function (response) {
-                                            redirectUnauthorised(response);
-                                        }
-                                    })
-                               }
-                            }
-                            if (locationHash[2] === 'edit') {
-                                $('.product-form').each(function () {
-                                    this.reset();
-                                })
-                                $.ajax('/products/' + locationHash[1] + '/edit', {
+                        if (locationHash.length > 1) {
+                            $('.page').hide();
+                            if (locationHash[1] === 'create') {
+                                $.ajax('/products', {
                                     dataType: 'json',
                                     success: function (response) {
                                         $('.products-create-edit').show();
-                                        $('.product-update').show();
-                                        $('.product-create').hide();
-                                        $('#title').val(response.title);
-                                        $('#description').val(response.description);
-                                        $('#price').val(response.price);
-                                        $('#product-id').val(response.id);
+                                        $('.product-update').hide();
+                                        $('.product-create').show();
                                     },
                                     error: function (response) {
                                         redirectUnauthorised(response);
                                     }
                                 })
                             }
+                        }
+                        if (locationHash[2] === 'edit') {
+                            $.ajax(`/products/${locationHash[1]}/edit`, {
+                                dataType: 'json',
+                                success: function (response) {
+                                    $('.products-create-edit').show();
+                                    $('.product-update').show();
+                                    $('.product-create').hide();
+                                    $('#title').val(response.title);
+                                    $('#description').val(response.description);
+                                    $('#price').val(response.price);
+                                    $('#product-id').val(response.id);
+                                },
+                                error: function (response) {
+                                    redirectUnauthorised(response);
+                                }
+                            })
+                        }
                     break;
                     case '#orders':
                         $.ajax('/orders', {
@@ -244,29 +246,23 @@
                                 redirectUnauthorised(response);
                             }
                         });
-                        break;php
+                    break;
                     case '#order':
                         // Show the individual order page
                         $('.order').show();
                         if (locationHash.length > 1) {
-                            $.ajax('{{route('orders.index')}}' + '/' + locationHash[1], {
+                            $.ajax(`/order/${locationHash[1]}`, {
                                 dataType: 'json',
                                 success: function (response) {
-                                    $('.order .order-view').append('<p><strong>{{ __('ID') . ': ' }}</strong>' + response.order.id + '</p>')
-                                    $('.order .order-view').append('<p><strong>{{ __('Name') . ': ' }}</strong>' + response.order.name + '</p>')
-                                    $('.order .order-view').append('<p><strong>{{ __('Contact details') . ': ' }}</strong>' + response.order.contact_details + '</p>')
-                                    $('.order .order-list').html(renderOrderView(response.products))
-                                    $('.table').append('<tr>')
-                                    $('.table').append('<td colspan="3" align="center"><strong>{{ __('Total Price') . ': '}}</strong></tr>')
-                                    $('.table').append('<td><strong>' + response.totalPrice + '<td')
-                                    $('.table').append('</tr>')
+                                    $('.order .order-list').html(renderOrderView(response.order))
                                 },
                                 error: function (response) {
                                     redirectUnauthorised(response);
+                                    
                                 }
                             })
                         }
-                        break;
+                    break;
                     default:
                         // If all else fails, always default to index
                         // Show the index page
@@ -277,10 +273,10 @@
                             success: function (response) {
                                 if (!response.length) {
                                     // Don't render the products table if all products in cart
-                                    $('.index .list').html('<p class="text-danger">{{ __('No products available') }}</p>')
+                                    $('.index .list').html('<p class="text-danger"> No products available </p>')
                                 } else {
                                     // Render the products in the index list
-                                    $('.index .list').html(renderList(response));
+                                    $('.index .list').html(renderList(window.location.hash, response));
                                 }
                             }
                         });
@@ -289,37 +285,69 @@
                 }
                 window.onhashchange();
             });
+
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
-            // add products to cart
-            $(document).on('click', '.add-to-cart', function () {
-                $.ajax('/', {
-                    type: 'POST',
-                    data: {
-                        id: $(this).data('id')
-                    },
-                    dataType: 'json',
-                    success: function () {
-                        window.onhashchange();
-                    }
-                });
+        // add products to cart
+        $(document).on('click', '.add-to-cart', function () {
+            $.ajax('/', {
+                type: 'POST',
+                data: {
+                    id: $(this).data('id')
+                },
+                dataType: 'json',
+                success: function () {
+                    window.onhashchange();
+                }
             });
-            // remove products from cart
-            $(document).on('click', '.remove-from-cart', function () {
-                $.ajax('/cart', {
-                    type: 'POST',
-                    data: {
-                        id: $(this).data('id'),
-                    },
-                    dataType: 'json',
-                    success: function () {
-                        window.onhashchange();
-                    }
-                });
+        });
+
+        // remove products from cart
+        $(document).on('click', '.remove-from-cart', function () {
+            $.ajax('/cart', {
+                type: 'POST',
+                data: {
+                    id: $(this).data('id'),
+                },
+                dataType: 'json',
+                success: function () {
+                    window.onhashchange();
+                }
             });
+        });
+
+        function validationCheck(errorMessage, errorName, error) {
+            errorName.css('display', 'block');
+            errorName.html(errorMessage.errors[error]);
+        }
+
+        function productValidation(errorMessage) {
+            if (errorMessage.errors.hasOwnProperty('title')) {
+                let titleError = $('.title-error');
+                validationCheck(errorMessage, titleError, 'title');
+                $('#title').addClass('is-invalid');
+            }
+            if (errorMessage.errors.hasOwnProperty('description')) {
+                let descriptionError = $('.description-error');
+                validationCheck(errorMessage, descriptionError, 'description');
+                $('#description').addClass('is-invalid');
+            }
+            if (errorMessage.errors.hasOwnProperty('price')) {
+                let priceError = $('.price-error');
+                validationCheck(errorMessage, priceError, 'price');
+                $('#price').addClass('is-invalid');
+            }
+            if (errorMessage.errors.hasOwnProperty('image')) {
+                let imageError = $('.image-error');
+                validationCheck(errorMessage, imageError, 'image');
+                $('#image').addClass('is-invalid');
+            }
+        }
+        
+
         //checkout form functionality
         $(document).on('click', '.submit', function (e) {
             e.preventDefault();
@@ -344,25 +372,18 @@
             },
             error: function (error) {
                 $('.submit').prop('disabled', false);
-                $('.submit').html('{{ __('Checkout') }}');
+                $('.submit').html(' Checkout ');
+
                 let errorMessage = JSON.parse(error.responseText)
                 if (errorMessage.errors.hasOwnProperty('name')) {
                     let nameErr = $('.name-error');
-                    nameErr.css('display', 'block');
-                    nameErr.html(errorMessage.errors['name']);
+                    validationCheck(errorMessage, nameErr, 'name');
                     $('#name').addClass('is-invalid');
                 }
                 if (errorMessage.errors.hasOwnProperty('contactDetails')) {
                     let contactDetailsErr = $('.contactDetails-error');
-                    contactDetailsErr.css('display', 'block');
-                    contactDetailsErr.html(errorMessage.errors['contactDetails']);
+                    validationCheck(errorMessage, contactDetailsErr, 'contactDetails');
                     $('#contactDetails').addClass('is-invalid');
-                }
-                if (errorMessage.errors.hasOwnProperty('comments')) {
-                    let commentsErr = $('.comments-error');
-                    commentsErr.css('display', 'block');
-                    commentsErr.html(errorMessage.errors['comments']);
-                    $('#comments').addClass('is-invalid');
                 }
             }
         })
@@ -388,24 +409,20 @@
                 processData: false,
                 contentType: false,
                 success: function (response) {
-                    $('#login-btn').attr('href', '#logout');
-                    $('#login-btn').attr('id', 'logout-btn');
-                    $('#logout-btn').html('{{ __('Logout') }}');
+                    $('.login-button').hide();
+                    $('.logout-button').show();
                     window.location.hash = '#products';
-                    window.location.reload();
                 },
                 error: function (error) {
                     let errorMessage = JSON.parse(error.responseText)
                     if (errorMessage.errors.hasOwnProperty('username')) {
                         let usernameError = $('.username-error');
-                        usernameError.css('display', 'block');
-                        usernameError.html(errorMessage.errors['username']);
-                        $('#username').addClass('is-invalid')
+                        validationCheck(errorMessage, usernameError, 'username');
+                        $('#username').addClass('is-invalid');
                     }
                     if (errorMessage.errors.hasOwnProperty('password')) {
                         let passwordError = $('.password-error');
-                        passwordError.css('display', 'block');
-                        passwordError.html(errorMessage.errors['password']);
+                        validationCheck(errorMessage, passwordError, 'password');
                         $('#password').addClass('is-invalid')
                     }
                 }
@@ -433,7 +450,7 @@
                     },
                 });
             })
-        // Redirect to product edit page
+            // Redirect to product edit page
         $(document).on('click', '.edit-product', function () {
             let id = $(this).data('id');
             window.location.hash = `#product/${id}/edit`;
@@ -448,6 +465,7 @@
         // Product create functionality
         $(document).on('click', '.product-create', function (e) {
             e.preventDefault();
+
             let data = new FormData();
             data.append('title', $('input[id=title]').val());
             data.append('description', $('input[id=description]').val());
@@ -457,7 +475,7 @@
             }
             
             $('.product-create').prop('disabled', true);
-            $('.product-create').html('{{ __('Please wait') . '...' }}')
+            $('.product-create').html('Please wait');
             $.ajax('/products', {
                 type: 'POST',
                 dataType: 'json',
@@ -467,7 +485,7 @@
                 processData: false,
                 success: function () {
                     $('.product-create').prop('disabled', false);
-                    $('.product-create').html('{{ __('Create') }}');
+                    $('.product-create').html('Create');
                     $('.product-form').each(function () {
                         this.reset();
                     })
@@ -475,33 +493,10 @@
                 },
                 error: function (error) {
                     $('.product-create').prop('disabled', false);
-                    $('.product-create').html('{{ __('Create') }}');
+                    $('.product-create').html('Create');
                     let errorMessage = JSON.parse(error.responseText)
-                    if (errorMessage.errors.hasOwnProperty('title')) {
-                        let titleError = $('.title-error');
-                        titleError.css('display', 'block');
-                        titleError.html(errorMessage.errors['title']);
-                        $('#title').addClass('is-invalid');
-                    }
-                    if (errorMessage.errors.hasOwnProperty('description')) {
-                        let descriptionError = $('.description-error');
-                        descriptionError.css('display', 'block');
-                        descriptionError.html(errorMessage.errors['description']);
-                        $('#description').addClass('is-invalid');
-                    }
-                    if (errorMessage.errors.hasOwnProperty('price')) {
-                        let priceError = $('.price-error');
-                        priceError.css('display', 'block');
-                        priceError.html(errorMessage.errors['price']);
-                        $('#price').addClass('is-invalid');
-                    }
-                    if (errorMessage.errors.hasOwnProperty('image')) {
-                        let imageError = $('.image-error');
-                        imageError.css('display', 'block');
-                        imageError.html(errorMessage.errors['image']);
-                        $('#image').addClass('is-invalid');
-                    }
-                }
+                    productValidation(errorMessage);
+                }           
             })
             $('input[id=title]').keypress(function () {
                 $('.title-error').hide();
@@ -529,7 +524,7 @@
             }
             
             $('.product-update').prop('disabled', true);
-            $('.product-update').html('{{ __('Please wait') . '...' }}')
+            $('.product-update').html('Please wait');
             $.ajax('/products/' + parseInt($('input[id=product-id]').val()), {
                 type: 'POST',
                 dataType: 'json',
@@ -539,7 +534,7 @@
                 processData: false,
                 success: function () {
                     $('.product-update').prop('disabled', false);
-                    $('.product-update').html('{{ __('Update') }}');
+                    $('.product-update').html('Update');
                     $('.product-form').each(function () {
                         this.reset();
                     })
@@ -547,32 +542,9 @@
                 },
                 error: function (error) {
                     $('.product-update').prop('disabled', false);
-                    $('.product-update').html('{{ __('Update') }}');
+                    $('.product-update').html('Update');
                     let errorMessage = JSON.parse(error.responseText)
-                    if (errorMessage.errors.hasOwnProperty('title')) {
-                        let titleError = $('.title-error');
-                        titleError.css('display', 'block');
-                        titleError.html(errorMessage.errors['title']);
-                        $('#title').addClass('is-invalid');
-                    }
-                    if (errorMessage.errors.hasOwnProperty('description')) {
-                        let descriptionError = $('.description-error');
-                        descriptionError.css('display', 'block');
-                        descriptionError.html(errorMessage.errors['description']);
-                        $('#description').addClass('is-invalid');
-                    }
-                    if (errorMessage.errors.hasOwnProperty('price')) {
-                        let priceError = $('.price-error');
-                        priceError.css('display', 'block');
-                        priceError.html(errorMessage.errors['price']);
-                        $('#price').addClass('is-invalid');
-                    }
-                    if (errorMessage.errors.hasOwnProperty('image')) {
-                        let imageError = $('.image-error');
-                        imageError.css('display', 'block');
-                        imageError.html(errorMessage.errors['image']);
-                        $('#image').addClass('is-invalid');
-                    }
+                    productValidation(errorMessage);
                 }
             })
             $('input[id=title]').keypress(function () {
@@ -588,35 +560,19 @@
                 $('#price').removeClass('is-invalid');
             });
         });
-        // Delete product from database functionality
-        $(document).on('click', '.delete-comment', function () {
-        let id = $(this).data('id');
-        $.ajax(`comments/${id}`, {
-            type: 'DELETE',
-            data: {
-                id
-            },
-            dataType: 'json',
-            success: function () {
-                window.onhashchange();
-            },
-        });
-    })
+        
     </script>
     </head>
     <body>
         <div class="container">
             <!-- The nav bar -->
             <nav class="nav justify-content-center">
-                <a class="nav-link" href="#">{{ __('Home') }}</a>
-                <a class="nav-link" href="#cart">{{ __('Cart') }}</a>
-                <a class="nav-link" href="#products">{{ __('Products') }}</a>
-                <a class="nav-link" href="#orders">{{ __('Orders') }}</a>
-                @auth
-                    <a class="btn btn-warning nav-link" id="logout-btn" href="#logout">{{ __('Logout') }}</a>   
-                @else
-                    <a class="btn btn-warning nav-link" id="login-btn" href="#login">{{ __('Login') }}</a>
-                @endauth
+                <a class="nav-link" href="#"> Home </a>
+                <a class="nav-link" href="#cart"> Cart </a>
+                <a class="nav-link" href="#products"> Products </a>
+                <a class="nav-link" href="#orders"> Orders </a>
+                <a style="display:none" class="logout-button btn btn-warning nav-link" id="logout-btn" href="#logout">Logout</a>   
+                <a class="login-button btn btn-warning nav-link" id="login-btn" href="#login">Login </a>
             </nav>
 
             <!-- The index page -->
@@ -625,7 +581,7 @@
                 <div class="list"></div>
 
                 <!-- A link to go to the cart by changing the hash -->
-                <a href="#cart" class="button btn btn-warning">{{ __('Go to cart') }}</a>
+                <a href="#cart" class="button btn btn-warning"> Go to cart </a>
             </div>
 
             <!-- The cart page -->
@@ -636,30 +592,30 @@
                 <!-- The checkout form -->
                 <form class="checkout-form">
                     <div class="form-group">
-                        <label for="name">{{ __('Name') }}</label>
-                        <input type="text" class="form-control" id="name" placeholder="{{ __(' Enter your name..') }}">
+                        <label for="name"> Name </label>
+                        <input type="text" class="form-control" id="name" placeholder="Enter your name...">
                         <p class="name-error text-danger" style="display: none"></p>
                     </div>
 
                     <div class="form-group">
-                        <label for="contactDetails">{{ __('Contact details') }}</label>
+                        <label for="contactDetails"> Contact details </label>
                         <input type="text" class="form-control" id="contactDetails"
-                            placeholder="{{ __(' Enter your contact details..') }}">
+                            placeholder="Enter your contact details...">
                         <p class="contactDetails-error text-danger" style="display: none"></p>
                     </div>
 
                     <div class="form-group">
-                        <label for="comments">{{ __('Comments') }}</label>
+                        <label for="comments"> Comments </label>
                         <textarea class="form-control" id="comments" rows="3"
                             placeholder=" Insert any comment.."></textarea>
                         <p class="comments-error text-danger" style="display: none"></p>
                     </div>
 
-                    <button type="submit" class="submit btn btn-primary">{{ __('Checkout') }}</button>
+                    <button type="submit" class="submit btn btn-primary"> Checkout </button>
                 </form>
 
                 <!-- A link to go to the index by changing the hash -->
-                <a href="#" class="button btn btn-warning">{{ __('Go to index') }}</a>
+                <a href="#" class="button btn btn-warning"> Go to index </a>
             </div>
 
             <!-- The login page -->
@@ -667,26 +623,26 @@
                 <div class="row justify-content-center">
                     <div class="col-md-8">
                         <div class="card">
-                            <div class="card-header">{{ __('Login') }}</div>
+                            <div class="card-header"> Login </div>
             
                             <div class="card-body">
                                 <form class="login-form">
                                     @csrf
             
                                     <div class="form-group row">
-                                        <label for="username" class="col-md-4 col-form-label text-md-right">{{ __('Username') }}</label>
+                                        <label for="username" class="col-md-4 col-form-label text-md-right"> Username </label>
             
                                         <div class="col-md-6">
-                                            <input id="username" type="text" class="form-control" id="username" name="username" placeholder="{{ __('Username') }}">
+                                            <input type="text" class="form-control" id="username" name="username" placeholder="{{ __('Username') }}">
                                             <p class="username-error text-danger" style="display: none"></p>
                                         </div>
                                     </div>
             
                                     <div class="form-group row">
-                                        <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('Password') }}</label>
+                                        <label for="password" class="col-md-4 col-form-label text-md-right"> Password </label>
             
                                         <div class="col-md-6">
-                                            <input id="password" type="password" class="form-control" id="password" name="password" placeholder="{{ __('Password') }}">
+                                            <input type="password" class="form-control" id="password" name="password" placeholder="{{ __('Password') }}">
                                             <p class="password-error text-danger" style="display: none"></p>
                                         </div>
                                     </div>
@@ -694,7 +650,7 @@
                                     <div class="form-group row mb-0">
                                         <div class="col-md-8 offset-md-4">
                                             <button type="submit" id="login-button" class="login-submit btn btn-primary">
-                                                {{ __('Login') }}
+                                                 Login
                                             </button>
             
                                         </div>
@@ -710,7 +666,7 @@
             <div class="page products">
                 <div class="list mb-1"></div>
                 <div>
-                    <a href="#product/create" class="btn btn-primary">{{ __('Add a new product') }}</a>
+                    <a href="#product/create" class="btn btn-primary"> Add a new product </a>
                 </div>
             </div>
 
@@ -718,31 +674,31 @@
             <div class="page products-create-edit">
                 <form class="product-form form-group" enctype="multipart/form-data">
                     <div class="form-group">
-                        <label for="title">{{ __('Title') }}</label>
-                        <input type="text" class="form-control" id="title" placeholder="{{ __('Enter product title') }}"
+                        <label for="title"> Title </label>
+                        <input type="text" class="form-control" id="title" placeholder=" Enter product title "
                             class="form-control">
 
                         <p class="title-error text-danger" style="display: none"></p>
                     </div>
 
                     <div class="form-group">
-                        <label for="description">{{ __('Description') }}</label>
+                        <label for="description"> Description </label>
                         <input type="text" class="form-control" id="description"
-                            placeholder="{{ __('Enter product description') }}" class="form-control">
+                            placeholder="Enter product description" class="form-control">
 
                         <p class="description-error text-danger" style="display: none"></p>
                     </div>
 
                     <div class="form-group">
-                        <label for="price">{{ __('Price') }}</label>
-                        <input type="text" class="form-control" id="price" placeholder="{{ __('Enter product price') }}"
+                        <label for="price"> Price </label>
+                        <input type="text" class="form-control" id="price" placeholder="Enter product price"
                             class="form-control">
 
                         <p class="price-error text-danger" style="display: none"></p>
                     </div>
 
                     <div>
-                        <label for="image">{{ __('Image') }}</label>
+                        <label for="image"> Image </label>
                         <input type="file" id="image">
 
                         <p class="image-error text-danger" style="display: none"></p>
@@ -750,8 +706,8 @@
 
                     <input type="hidden" id="product-id" value="">
 
-                    <button type="button" class="product-create btn btn-primary">{{ __('Create') }}</button>
-                    <button type="button" class="product-update btn btn-warning">{{ __('Update') }}</button>
+                    <button type="button" class="product-create btn btn-primary"> Create </button>
+                    <button type="button" class="product-update btn btn-warning"> Update </button>
                 </form>
             </div>
 

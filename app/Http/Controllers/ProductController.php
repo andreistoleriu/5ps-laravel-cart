@@ -16,8 +16,8 @@ class ProductController extends Controller
     {
         $products = Product::all();
 
-        if ($request->ajax()) {
-            return $products;
+        if ($request->expectsJson()) {
+            return response()->json($products);
         }
 
         return view('products.index', compact('products'));
@@ -30,10 +30,10 @@ class ProductController extends Controller
      */
     public function create(Request $request)
     {
-        if ($request->ajax()) {
-            return [
+        if ($request->expectsJson()) {
+            return response()->json([
                 'product' => true
-            ];
+            ]);
         }
 
         return view('products.create');
@@ -56,10 +56,10 @@ class ProductController extends Controller
             'image' => $this->storeImage($request),
         ]);
 
-        if ($request->ajax()) {
-            return [
+        if ($request->expectsJson()) {
+            return response()->json([
                 'success' => 'Product created'
-            ];
+            ]);
         }
 
         return redirect()->route('products.index');
@@ -73,8 +73,8 @@ class ProductController extends Controller
      */
     public function edit(Product $product, Request $request)
     {
-        if ($request->ajax()) {
-            return $product;
+        if ($request->expectsJson()) {
+            return response()->json($product);
         }
 
         return view('products.edit', compact('product'));
@@ -96,10 +96,10 @@ class ProductController extends Controller
             $product->update(['image' => $image]);
         }
 
-        if ($request->ajax()) {
-            return [
+        if ($request->expectsJson()) {
+            return response()->json([
                 'success' => 'Product updated'
-            ];
+            ]);
         }
 
         return redirect()->route('products.index');
@@ -115,10 +115,10 @@ class ProductController extends Controller
     {
         $product->delete();
 
-        if ($request->ajax()) {
-            return [
+        if ($request->expectsJson()) {
+            return response()->json([
                 'product' => 'deleted'
-            ];
+            ]);
         }
 
         return redirect()->route('products.index');

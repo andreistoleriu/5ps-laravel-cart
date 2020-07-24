@@ -16,10 +16,9 @@ class OrderController extends Controller
     {
         $orders = Order::all();
 
-        if ($request->ajax()) {
-            return $orders;
+        if ($request->expectsJson()) {
+            return response()->json($orders);
         }
-        
         return view('orders', compact('orders'));
     }
 
@@ -29,14 +28,14 @@ class OrderController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function show(Order $order, Request $request)
-    {   
+    {
         $result = [
             'totalPrice' => $order->price,
             'order' => $order,
         ];
 
-        if ($request->ajax()) {
-            return $result;
+        if ($request->expectsJson()) {
+            return response()->json($result);
         }
 
         return view('order', $result);

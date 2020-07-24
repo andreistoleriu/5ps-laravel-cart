@@ -20,8 +20,8 @@ class CartController extends Controller
         $cart = $request->session()->get('cart', []);
         $products = Product::query()->whereNotIn('id', $cart)->get();
 
-        if ($request->ajax()) {
-            return $products;
+        if ($request->expectsJson()) {
+            return response()->json($products);
         }
 
         return view('index', compact('products'));
@@ -32,8 +32,8 @@ class CartController extends Controller
         Product::findOrFail($request->input('id'));
         $request->session()->push('cart', $request->input('id'));
 
-        if ($request->ajax()) {
-            return ['success' => true];
+        if ($request->expectsJson()) {
+            return response()->json(['success' => true]);
         }
 
         return redirect()->route('index');
@@ -55,8 +55,8 @@ class CartController extends Controller
             'cart' => $cart ? true : false
         ];
 
-        if ($request->ajax()) {
-            return $result;
+        if ($request->expectsJson()) {
+            return response()->json($result);
         }
 
         return view('cart', $result);
@@ -99,10 +99,10 @@ class CartController extends Controller
 
         Mail::to(config('mail.mail_to'))->send(new Checkout($data, $products, $price));
 
-        if ($request->ajax()) {
-            return [
+        if ($request->expectsJson()) {
+            return response()->json([
                'success' => 'Order has been sent! Thank you!'
-            ];
+            ]);
         }
 
         return redirect()->route('cart')->with('status', 'Order has been sent!');

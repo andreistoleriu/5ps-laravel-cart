@@ -14,7 +14,6 @@ class CommentController extends Controller
         $product = Product::findOrfail($request->input('id'));
         $comments = $product->comments;
         
-
             $result = [
                 'product' => $product,
                 'comments' => $comments
@@ -45,7 +44,7 @@ class CommentController extends Controller
                            ->select('products.*', 'comments.id AS cid', 'comments.message', 'comments.created_at')
                            ->get();
 
-        if ($request->ajax()) {
+        if ($request->expectsJson()) {
             return $comments;
         }
         
@@ -55,9 +54,15 @@ class CommentController extends Controller
         ]);
     }
 
-    public function destroy(Comment $comment)
+    public function destroy(Comment $comment, Request $request)
     {
         $comment->delete();
+        
+        if ($request->expectsJson()) {
+            return [
+                'comment' => 'deleted'
+            ];
+        }
         
         return redirect()->route('comments.index');
     }
@@ -67,16 +72,16 @@ class CommentController extends Controller
         return view('comments_edit', ['comment' => $comment]);
     }
 
-    public function update(Comment $comment)
+    public function update(Comment $comment, Request $request)
     {
-        $comment->update($this->validateRequest());
+        $comment->update($this->validateRequest($request));
 
         return redirect()->route('comments.index');
     }
 
-    public function validateRequest()
+    public function validateRequest(Request $request)
     {
-        return request()->validate([
+        return $request->validate([
             'message' => 'required|min:3',
         ]);
     }
